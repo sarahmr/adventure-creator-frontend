@@ -1,13 +1,395 @@
+@import url('https://fonts.googleapis.com/css2?family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Assistant', sans-serif; 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: black;
+}
+
+a:hover {
+  color: #ff6848;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0 0 4px 0 grey;
+}
+
+.nav-links {
+  display: flex;
+}
+
+.nav-link {
+  margin: 5px;
+  text-decoration: none;
+  color: black;
+}
+
+a.selected {
+  color: #ff6848;
+  border-bottom: 1px solid #ff6848;
+}
+
+.nav-links p {
+  margin-left: 10px;
+}
+
+.logo {
+  display: flex;
+}
+
+.site-title {
+  font-family: 'Sacramento', cursive;
+  margin: 10px;
+  font-size: 35px;
+  align-self: center;
+  font-weight: normal;
+}
+
+.story-card {
+  border: solid 1px black;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.story-card:hover {
+  border: 2px solid #ff6848
+}
+
+.story-info {
+  margin: 10px;
+}
+
+.story-info h2 {
+  margin: 10px;
+  margin-left: 0px;
+}
+
+.story-info h4 {
+  margin: 10px;
+  margin-left: 0px;
+}
+
+.rating {
+  display: flex;
+  align-items: flex-end;
+}
+
+.rating p {
+  margin: 0px;
+}
+
+.story-buttons {
+  display: flex;
+  margin-left: 200px;
+  margin-right: 200px;
+  justify-content: space-evenly;
+}
+
+.choices-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.choice-card {
+  border: solid 1px black;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.choice-card:hover {
+  border: 2px solid #ff6848;
+}
+
+.story-editor {
+  display: grid;
+  grid-template: "options" "display";
+  margin-right: 200px;
+  margin-left: 200px;
+}
+
+.story-options {
+  grid-area: options;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  border: 1px solid black;
+  padding: 5px;
+  margin: 10px;
+}
+
+.story-options button {
+  width: auto;
+  align-self: center;
+}
+
+.scene-display {
+  grid-area: display;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.scene-display button {
+  margin-bottom: 5px;
+}
+
+.scene {
+  border: solid black 1px;
+  margin-bottom: 5px;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.scene button {
+  height: fit-content;
+}
+
+.scene h4 {
+  margin: 0px;
+  margin-right: 5px;
+}
+
+.scene-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.scene-form {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+.scene-form input {
+  width: fit-content;
+}
+
+.path-area {
+  margin: 5px;
+}
+
+.path {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.path-details {
+  display: flex;
+}
+
+.user-forms {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-forms form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-forms form div {
+  margin: 5px;
+}
+
+.user-details {
+  display: grid;
+  grid-template: "image name"
+                 "image bio"
+                 "image edit";
+  margin-left: 200px;
+  margin-right: 200px;
+}
+
+.user-details img {
+  grid-area: image;
+  justify-self: center;
+  align-self: center;
+}
+
+.user-details h2 {
+  grid-area: name;
+}
+
+.user-details p {
+  grid-area: bio;
+}
+
+.user-details button {
+  grid-area: edit;
+  justify-self: right;
+}
+
+.filled-stars {
+  color: gold;
+}
+
+.empty-stars {
+  color: black;
+}
+
+.stories-list {
+  margin-left: 200px;
+  margin-right: 200px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.story-details {
+  margin-left: 200px;
+  margin-right: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reviews {
+  margin-left: 200px;
+  margin-right: 200px;
+  margin-top: 20px;
+  border-top: 1px solid lightgrey;
+}
+
+.play-area {
+  margin-left: 200px;
+  margin-right: 200px;
+}
+
+.play-area h2 {
+  text-align: center;
+}
+
+.title-description {
+  display: flex;
+  flex-direction: column;
+}
+
+.publish-save {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+button {
+  font-family: 'Assistant', sans-serif; 
+  font-weight: 600;
+  background-color: #ff8a71;
+  border-radius: 5px;
+  font-size: 14px;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  box-shadow: 0 0 1px 1px lightgrey;
+}
+
+button:focus {
+  border-radius: 5px;
+  outline: none;
+}
+
+button:active {
+  border-radius: 5px;
+}
+
+input[type="submit"] {
+  font-family: 'Assistant', sans-serif; 
+  font-weight: 600;
+  background-color: #ff8a71;
+  border-radius: 5px;
+  font-size: 14px;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+input[type="submit"]:hover {
+  box-shadow: 0 0 1px 1px lightgrey;
+}
+
+input[type="submit"]:focus {
+  outline: none;
+}
+
+.scene-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.scene-submit {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.review-form {
+  display: grid;
+  grid-template: "title title"
+                  "rating review"
+                  "submit submit";
+  width: 600px;
+  margin-top: 10px;
+}
+
+.review-title {
+  grid-area: title;
+}
+
+.review-form h4 {
+  margin: 5px;
+}
+
+.review-form h2 {
+  margin: 5px;
+}
+
+.review-content-rating {
+  grid-area: rating;
+}
+
+.review-content-review {
+  grid-area: review;
+}
+
+.review-submit {
+  grid-area: submit;
+}
+
+.single-review {
+  display: flex;
+  margin: 10px;
+}
+
+.user-review {
+  margin-left: 10px;
 }
