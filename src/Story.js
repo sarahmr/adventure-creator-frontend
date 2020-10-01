@@ -18,12 +18,12 @@ class Story extends React.Component {
         <div className="story-card" onClick={this.storyDetails}>
           <div className="story-info">
           <h2>{this.props.story.title}</h2>
-          <h4><span>Written by: </span> 
+          <h4><span>Written by </span> 
             <Link to={`/author/${this.props.story.user.id}`} onClick={(e) => e.stopPropagation()}>{this.props.story.user.name}</Link>
           </h4>
           { this.props.user && this.props.userProfile && 
             <>
-            { this.props.user.id === this.props.userProfile.id && <p>Story status: {this.props.story.published ? "Published" : "Draft" } </p>  } 
+            { this.props.user.id === this.props.userProfile.id && <>{this.props.story.published ? <p className="status" style={{backgroundColor: "#79d3a5" }}> Published</p> : <p className="status">Draft</p> } </>  } 
             </>
           }
           </div>

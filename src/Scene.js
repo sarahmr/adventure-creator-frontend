@@ -122,8 +122,8 @@ class Scene extends React.Component {
     return(
       <div className="scene">
         <div className="scene-title">
-          <h4>Scene Title: {this.props.scene.title}</h4>
-          <button onClick={this.displayForm} >Edit Scene</button>
+          <h3>{this.props.scene.title ? this.props.scene.title : "Scene Title"}</h3>
+          { !this.state.edit && <button onClick={this.displayForm} >Edit Scene</button> }
         </div>
         <div>
           {this.state.edit ? 
@@ -134,12 +134,12 @@ class Scene extends React.Component {
             </div>
             <div className="scene-info">
               <label>Text:</label>
-              <textarea onChange={this.onChange} name="text" value={this.state.text} ></textarea>
+              <textarea rows="4" onChange={this.onChange} name="text" value={this.state.text} ></textarea>
             </div>
             <div className="path-area">
               <h4>Paths:</h4>
               {this.renderPaths()}
-              <button type="button" onClick={this.addAPath}>Add a Path</button>
+              <button type="button" onClick={this.addAPath}>+</button>
             </div>
             <div className="scene-submit">
               <input type="submit" value="Save"/>

@@ -33,7 +33,7 @@ class AdventureCreator extends React.Component {
 
   handleLogin = (currentUser, image) => {
    currentUser["image"] = image  
-   this.setState({ currentUser }) 
+   this.setState({ currentUser }, () => {this.props.history.push('/')}) 
   }
 
   handleLogout = () => {

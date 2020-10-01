@@ -27,7 +27,7 @@ class Path extends React.Component {
           {
             this.props.scenes.length > 1 ? 
             <>
-            <label><span> or </span></label>
+            <label><span className="path-details"> or </span></label>
             <select name="selected_scene" onChange={this.onChange} value={this.props.path.selected_scene}>
               <option>Select A Scene</option>
               {this.props.scenes.map(scene => 
@@ -38,7 +38,6 @@ class Path extends React.Component {
           }
         </div>
         <div className="path-details">
-          {/* <label>Choice Text: </label> */}
           <input onChange={this.onChange} type="text" placeholder="Choice Text" name="choice_text" value={this.props.path.choice_text} />
         </div>
         

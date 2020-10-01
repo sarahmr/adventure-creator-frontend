@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 import CompassLogo from './compass.png'
 
 class SiteNavBar extends React.Component {
@@ -7,7 +7,7 @@ class SiteNavBar extends React.Component {
   render() {
     return (
       <header className="navbar">
-        <div className="logo">
+        <div className="logo" onClick={() => this.props.history.push('/')}>
           <img src={ CompassLogo } alt="compass" height="75px" />
           <h2 className="site-title" >Adventure Creator</h2>
         </div>
@@ -28,4 +28,4 @@ class SiteNavBar extends React.Component {
   }
 }
 
-export default SiteNavBar
+export default withRouter(SiteNavBar)

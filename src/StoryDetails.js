@@ -29,20 +29,6 @@ class StoryDetails extends React.Component {
     this.props.history.push(`/play/${id}`)
   }
 
-  storyToDelete = (id) => {
-    // delete story from database
-    fetch(`http://localhost:3001/stories/${id}`, {
-      method: "DELETE",
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-    .then(res => res.json())
-    .then(deletedStory => {
-      this.props.history.push(`/author/${this.props.user.id}`)
-    })
-  }
-
   getNewReviews = (reviewObj) => {
     // add new review to state
     this.setState({
@@ -61,21 +47,22 @@ class StoryDetails extends React.Component {
     return (
       <div>
         <div className="story-details">
-          <h2>{this.state.story.title}</h2>
-            <h4><span>Written by: </span> 
+          <div className="story-details-title">
+            <h2>{this.state.story.title}</h2>
+            { this.props.user.id === this.state.story.user.id && <> { this.state.story.published ? <p className="status" style={{backgroundColor: "#79d3a5" }}> Published</p> : <p className="status">Draft</p> } </> }
+          </div>
+            <h4><span>Written by </span> 
               <Link to={`/author/${this.state.story.user.id}`}>{this.state.story.user.name}</Link>
             </h4>
+            { this.props.user.id === this.state.story.user.id && 
+            <div className="edit-details"> 
+              <button onClick={() => {this.props.history.push(`/edit/${this.state.story.id}`)}} >Edit Story</button> 
+            </div> 
+            } 
           <p>Synopsis: {this.state.story.brief_description}</p>
-          { this.props.user.id === this.state.story.user.id ? <> { this.state.story.published ? <p>Status: Published</p> : <p>Status: Draft</p> } </> : null }
         </div>
         <div className="story-buttons" >
           <button onClick={() => this.startStory(this.state.story.id)} >Play</button>
-          { this.props.user.id === this.state.story.user.id ? 
-            <> 
-              <button onClick={() => {this.props.history.push(`/edit/${this.state.story.id}`)}} >Edit Story</button> 
-              <button onClick={() => {this.storyToDelete(this.state.story.id)}} >Delete Story</button> 
-            </> 
-          : null } 
         </div>
         <div className="reviews">
           <RatingAndReviewForm story={this.state.story} user={this.props.user} getNewReviews={this.getNewReviews} />

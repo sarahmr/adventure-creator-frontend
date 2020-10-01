@@ -19,6 +19,10 @@ class PlayArea extends React.Component {
     })
   }
 
+  playAgain = () => {
+    this.setState({ currentScene: this.state.story.scenes[0]})
+  }
+
   renderChoices = () => {
     return this.state.currentScene.paths.map((choice, index) => <Choice key={index} choice={choice} changeScene={this.changeScene} />)
   }
@@ -47,7 +51,10 @@ class PlayArea extends React.Component {
           <p>{this.state.currentScene.text}</p>
         </div>
         <div className="choices-display">
-          {this.state.currentScene.title ? this.renderChoices() : null}
+          {this.state.currentScene.paths.length > 0 ? this.renderChoices() : <>
+            <div onClick={this.playAgain} className="choice-card">Play Again</div>
+            <div onClick={() => this.props.history.push(`/story/${this.state.story.id}`)} className="choice-card">Leave a Review</div>
+          </> }
         </div>
       </div>
     )

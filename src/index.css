@@ -6,18 +6,20 @@ body {
   font-family: 'Assistant', sans-serif; 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #454545;
 }
 
 a {
   text-decoration: none;
+  color: #ff6848;
 }
 
 a:visited {
-  color: black;
+  color: #ff6848;
 }
 
 a:hover {
-  color: #ff6848;
+  text-decoration: underline;
 }
 
 .navbar {
@@ -27,16 +29,19 @@ a:hover {
   padding-left: 20px;
   padding-right: 20px;
   box-shadow: 0 0 4px 0 grey;
+  position: sticky;
+  top: 0;
+  background-color: white;
 }
 
 .nav-links {
   display: flex;
 }
 
-.nav-link {
+a.nav-link {
   margin: 5px;
   text-decoration: none;
-  color: black;
+  color:#565656;
 }
 
 a.selected {
@@ -50,6 +55,7 @@ a.selected {
 
 .logo {
   display: flex;
+  cursor: pointer;
 }
 
 .site-title {
@@ -58,15 +64,18 @@ a.selected {
   font-size: 35px;
   align-self: center;
   font-weight: normal;
+  color: #454545;
 }
 
 .story-card {
-  border: solid 1px black;
+  border: solid 1px lightgrey;
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 20px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
+  color: #555555;
+  box-shadow: 0 2px 2px 0 lightgrey;
 }
 
 .story-card:hover {
@@ -78,7 +87,7 @@ a.selected {
 }
 
 .story-info h2 {
-  margin: 10px;
+  margin: 0px;
   margin-left: 0px;
 }
 
@@ -90,6 +99,7 @@ a.selected {
 .rating {
   display: flex;
   align-items: flex-end;
+  color: #9f9f9f;
 }
 
 .rating p {
@@ -98,34 +108,46 @@ a.selected {
 
 .story-buttons {
   display: flex;
-  margin-left: 200px;
-  margin-right: 200px;
-  justify-content: space-evenly;
+  margin-left: 300px;
+  margin-right: 300px;
+  justify-content: center;
+}
+
+.story-buttons button {
+  width: 300px;
+  height: 30px;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .choices-display {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 75px;
 }
 
 .choice-card {
-  border: solid 1px black;
   margin: 5px;
-  padding: 5px;
+  padding: 10px;
   border-radius: 10px;
   width: fit-content;
+  cursor: pointer;
+  color: white;
+  font-weight: 700;
+  background-color: #6cc2d6;
 }
 
 .choice-card:hover {
-  border: 2px solid #ff6848;
+  /* border: 2px solid #ff6848; */
+  box-shadow: 0 4px 4px 0 lightgrey;
 }
 
 .story-editor {
   display: grid;
   grid-template: "options" "display";
-  margin-right: 200px;
-  margin-left: 200px;
+  margin-right: 300px;
+  margin-left: 300px;
 }
 
 .story-options {
@@ -133,9 +155,15 @@ a.selected {
   display: flex;
   justify-content: space-between;
   align-content: center;
-  border: 1px solid black;
-  padding: 5px;
+  padding: 20px;
   margin: 10px;
+  border-radius: 10px;
+  background-color: #f8f9f9;
+}
+
+.story-options textarea {
+  width: 400px;
+  background-color:#f8f9f9;
 }
 
 .story-options button {
@@ -155,12 +183,13 @@ a.selected {
 }
 
 .scene {
-  border: solid black 1px;
-  margin-bottom: 5px;
-  padding: 5px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+  background-color:#f8f9f9;
 }
 
 .scene button {
@@ -175,7 +204,17 @@ a.selected {
 .scene-title {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  align-items: center;
+}
+
+.scene-title h3 {
+  margin: 0;
+}
+
+.scene-title button {
+  margin: 0;
+  background-color: #e7e7e7;
+  color: grey;
 }
 
 .scene-form {
@@ -184,22 +223,63 @@ a.selected {
   align-content: center;
 }
 
-.scene-form input {
-  width: fit-content;
+.scene-info input {
+  width: 500px;
+  background-color:#f8f9f9;
+  border-radius: 3px;
+  padding: 5px;
+  border: 1px solid grey;
+}
+
+.scene-info textarea {
+  background-color:#f8f9f9;
+}
+
+.scene-button {
+  background-color: #e7e7e7;
+  width: 100%;
+  font-weight: 800;
+  font-size: 16px;
+  color: grey;
 }
 
 .path-area {
   margin: 5px;
 }
 
+.path-area button {
+  background-color: #e7e7e7;
+  color: grey;
+  width: fit-content;
+  height: fit-content;
+  margin: 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: 16px;
+}
+
 .path {
   margin-bottom: 10px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  /* border-left: 2px solid grey; */
 }
 
 .path-details {
   display: flex;
+  /* padding-right: 10px; */
+  /* padding: 10px; */
+  margin-right: 10px;
+}
+
+.path-details input {
+  width: 150px;
+  padding: 5px;
+  background-color:#f8f9f9;
+  /* height: fit-content; */
+  border: 1px solid grey;
+  border-radius: 3px;
+  background-color:#f8f9f9;
 }
 
 .user-forms {
@@ -222,9 +302,9 @@ a.selected {
   display: grid;
   grid-template: "image name"
                  "image bio"
-                 "image edit";
-  margin-left: 200px;
-  margin-right: 200px;
+                 "edit edit";
+  margin-left: 300px;
+  margin-right: 300px;
 }
 
 .user-details img {
@@ -255,30 +335,31 @@ a.selected {
 }
 
 .stories-list {
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 300px;
+  margin-right: 300px;
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
 .story-details {
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 300px;
+  margin-right: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 30px;
 }
 
 .reviews {
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 300px;
+  margin-right: 300px;
   margin-top: 20px;
   border-top: 1px solid lightgrey;
 }
 
 .play-area {
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 300px;
+  margin-right: 300px;
 }
 
 .play-area h2 {
@@ -290,11 +371,23 @@ a.selected {
   flex-direction: column;
 }
 
+.title-description input {
+  width: 400px;
+  padding: 5px;
+  border: 1px solid grey;
+  border-radius: 3px;
+  background-color:#f8f9f9;
+}
+
 .publish-save {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
+}
+
+.publish-save button {
+  margin-right: 5px;
 }
 
 button {
@@ -304,7 +397,7 @@ button {
   border-radius: 5px;
   font-size: 14px;
   color: white;
-  padding: 5px;
+  padding: 7px;
   cursor: pointer;
   border: none;
 }
@@ -325,11 +418,11 @@ button:active {
 input[type="submit"] {
   font-family: 'Assistant', sans-serif; 
   font-weight: 600;
-  background-color: #ff8a71;
+  background-color: #6cc2d6;
   border-radius: 5px;
   font-size: 14px;
   color: white;
-  padding: 5px;
+  padding: 7px;
   cursor: pointer;
   border: none;
 }
@@ -353,36 +446,18 @@ input[type="submit"]:focus {
 }
 
 .review-form {
-  display: grid;
-  grid-template: "title title"
-                  "rating review"
-                  "submit submit";
+  display: flex;
+  flex-direction: column;
   width: 600px;
   margin-top: 10px;
 }
 
-.review-title {
-  grid-area: title;
-}
-
 .review-form h4 {
-  margin: 5px;
+  margin: 0;
 }
 
 .review-form h2 {
   margin: 5px;
-}
-
-.review-content-rating {
-  grid-area: rating;
-}
-
-.review-content-review {
-  grid-area: review;
-}
-
-.review-submit {
-  grid-area: submit;
 }
 
 .single-review {
@@ -392,4 +467,45 @@ input[type="submit"]:focus {
 
 .user-review {
   margin-left: 10px;
+}
+
+textarea {
+  font-family:'Assistant', sans-serif; 
+  width: 500px;
+  resize: vertical;
+  padding: 5px;
+  border: 1px solid grey;
+  border-radius: 3px;
+}
+
+.edit-details {
+  display: flex;
+  justify-content: space-around;
+  width: 150px;
+  align-items: center;
+}
+
+.edit-details button {
+  padding: 5px;
+  font-size: 14px;
+}
+
+.status {
+  border: 0px solid lightgrey;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: lightgrey;
+  color: white;
+  margin: 0;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.story-details-title {
+  display: flex;
+}
+
+.story-details-title h2 {
+  margin: 0;
+  margin-right: 10px;
 }

@@ -56,7 +56,6 @@ class RatingAndReviewForm extends React.Component {
             <h4>Leave a Review:</h4>
           </div>
           <div className="review-content-rating">
-            <h4>Rating:</h4>
             <h2>
               <span onClick={() => this.handleStars(1)} className={this.state.rating >= 1 ? "filled-stars" : 'empty-stars'} >
                 { this.state.rating >= 1 ? '★' : '☆' }
@@ -76,8 +75,7 @@ class RatingAndReviewForm extends React.Component {
             </h2>
           </div>
           <div className="review-content-review">
-            <h4>Your thoughts:</h4>
-            <textarea type="text" name="reviewText" value={this.state.reviewText} onChange={this.handleReview} />
+            <textarea placeholder="Your thoughts..." rows="3" type="text" name="reviewText" value={this.state.reviewText} onChange={this.handleReview} />
           </div>
           <div className="review-submit">
             <input type="submit" />

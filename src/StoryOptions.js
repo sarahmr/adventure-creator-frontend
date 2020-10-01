@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 
 class StoryOptions extends React.Component {
 
@@ -54,6 +55,20 @@ class StoryOptions extends React.Component {
     })
   }
 
+  storyToDelete = (id) => {
+    // delete story from database
+    fetch(`http://localhost:3001/stories/${id}`, {
+      method: "DELETE",
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
+    .then(res => res.json())
+    .then(deletedStory => {
+      this.props.history.push(`/author/${this.props.story.user.id}`)
+    })
+  }
+
   render(){
     return (
       <div className="story-options">
@@ -64,7 +79,7 @@ class StoryOptions extends React.Component {
           </div>
           <div>
             <label>Brief Description:</label><br/>
-            <textarea onChange={this.onChange} type="text" name="brief_description" value={this.state.brief_description} />
+            <textarea rows="3" onChange={this.onChange} type="text" name="brief_description" value={this.state.brief_description} />
           </div>
         </div>
         <div className="publish-save">
@@ -73,11 +88,14 @@ class StoryOptions extends React.Component {
             <input type='checkbox' name="published" onChange={this.changeStoryStatus} checked={this.state.published} />
           </div>
           <div>{this.state.message}</div>
-          <button onClick={this.saveDraft} style={{alignSelf: "flex-end"}}>Save</button>
+          <div>
+            <button onClick={() => {this.storyToDelete(this.props.story.id)}} >Delete Story</button>
+            <button onClick={this.saveDraft} style={{backgroundColor: "#6cc2d6"}}>Save</button>
+          </div>         
         </div>
       </div>
     )
   }
 }
 
-export default StoryOptions
+export default withRouter(StoryOptions)

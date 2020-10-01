@@ -17,10 +17,10 @@ class SceneDisplayArea extends React.Component {
   render(){
     return(
       <div className="scene-display">
-        <div>
-          <button onClick={this.props.addNewScene}>Add New Scene</button>
-        </div>
         {this.displayScenes()}
+        <div>
+          <button className="scene-button" onClick={this.props.addNewScene}>Add New Scene</button>
+        </div>
       </div>
     )
   }
