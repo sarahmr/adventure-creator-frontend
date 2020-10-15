@@ -12,6 +12,7 @@ class StoriesList extends React.Component {
     fetch('http://localhost:3001/stories')
     .then(res => res.json())
     .then(storyObjArr => {
+      storyObjArr.sort((a, b) => a.id - b.id)
       this.setState({
         stories: storyObjArr
       })

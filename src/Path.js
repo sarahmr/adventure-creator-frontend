@@ -20,7 +20,6 @@ class Path extends React.Component {
     return(
       <div className="path">
         <div className="path-details">
-          {/* <label>Create a new scene: </label> */}
           <input onChange={this.onChange} type="text" placeholder="New Scene" name="scene_title" value={this.props.path.scene_title} />
         </div>
         <div className="path-details">

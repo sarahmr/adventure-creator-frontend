@@ -9,8 +9,6 @@ class UserStories extends React.Component {
     userProfile: null
   }
 
-  // fetch for user stories, filter for published ones if the logged in user isn't the userProfile users -- done on backend
-
   componentDidMount(){
     fetch(`http://localhost:3001/user_stories/${this.props.match.params.id}`, {
       headers: {
@@ -19,6 +17,7 @@ class UserStories extends React.Component {
     })
     .then(res => res.json())
     .then(storyObj => {
+      storyObj.sort((a, b) => a.id - b.id)
       this.setState({
         stories: storyObj
       })
@@ -48,6 +47,7 @@ class UserStories extends React.Component {
     })
     .then(res => res.json())
     .then(storyObj => {
+      storyObj.sort((a, b) => a.id - b.id)
       this.setState({
         stories: storyObj
       })

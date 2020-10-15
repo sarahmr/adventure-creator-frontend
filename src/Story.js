@@ -8,12 +8,6 @@ class Story extends React.Component {
   }
 
   render(){
-    // three cases:
-    // 1) your personal profile, need title, avg. rating, status
-    
-    // below can be handled by same condition is the logged in user the user for this page?
-    // 2) main page, title, avg. rating
-    // 3) someone else's profile, need title, avg. rating
     return(
         <div className="story-card" onClick={this.storyDetails}>
           <div className="story-info">

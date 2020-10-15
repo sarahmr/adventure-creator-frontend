@@ -1,5 +1,6 @@
 import React from 'react'
 import Path from './Path'
+import SceneTitle from './SceneTitle'
 
 class Scene extends React.Component {
 
@@ -38,7 +39,6 @@ class Scene extends React.Component {
     let paths = []
 
     // iterate through paths, if it's scene title need post request to get scene id, if selected scene need path formated as scene_id
-
     this.state.paths.forEach(path => {
       if (path.scene_title){
         needNewScenePaths.push(path)
@@ -121,10 +121,7 @@ class Scene extends React.Component {
   render(){
     return(
       <div className="scene">
-        <div className="scene-title">
-          <h3>{this.props.scene.title ? this.props.scene.title : "Scene Title"}</h3>
-          { !this.state.edit && <button onClick={this.displayForm} >Edit Scene</button> }
-        </div>
+        <SceneTitle edit={this.state.edit} scene={this.props.scene} displayForm={this.displayForm} />
         <div>
           {this.state.edit ? 
             <form onSubmit={this.onSubmit} className="scene-form">

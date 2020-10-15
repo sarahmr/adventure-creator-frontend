@@ -182,7 +182,23 @@ a.selected {
   margin-bottom: 5px;
 }
 
-.scene {
+.scene-drag-area {
+  border: grey 1px solid;
+}
+
+.scene-title {
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  /* background-color:#f8f9f9; */
+  background-color: pink;
+  width: fit-content;
+}
+
+/* .scene {
   border-radius: 10px;
   margin-bottom: 20px;
   padding: 20px;
@@ -190,7 +206,7 @@ a.selected {
   justify-content: space-between;
   flex-direction: column;
   background-color:#f8f9f9;
-}
+} */
 
 .scene button {
   height: fit-content;
