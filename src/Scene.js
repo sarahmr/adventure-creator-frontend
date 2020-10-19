@@ -121,7 +121,7 @@ class Scene extends React.Component {
   render(){
     return(
       <div className="scene">
-        <SceneTitle edit={this.state.edit} scene={this.props.scene} displayForm={this.displayForm} />
+        <SceneTitle edit={this.state.edit} scene={this.props.scene} displayForm={this.displayForm} top={this.props.top} left={this.props.left} />
         <div>
           {this.state.edit ? 
             <form onSubmit={this.onSubmit} className="scene-form">

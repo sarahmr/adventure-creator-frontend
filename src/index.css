@@ -184,6 +184,9 @@ a.selected {
 
 .scene-drag-area {
   border: grey 1px solid;
+  position: relative;
+  height: 600px;
+  width: 800px;
 }
 
 .scene-title {
@@ -196,6 +199,7 @@ a.selected {
   /* background-color:#f8f9f9; */
   background-color: pink;
   width: fit-content;
+  position: absolute;
 }
 
 /* .scene {

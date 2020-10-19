@@ -5,29 +5,26 @@ import { ItemTypes } from './Constants'
 
 function SceneDisplayArea(props) {
   let [scenes, setScenes] = useState({
-    a: { top: 20, left: 80 },
-    b: { top: 180, left: 20 }
   })
 
   let [, drop] = useDrop({
     accept: ItemTypes.SCENE,
     drop(item, monitor) {
-      // let delta = monitor.getItem();
-      monitor.getItem()
-      // let left = Math.round(item.left + delta.x)
-      // let top = Math.round(item.top + delta.y)
-      // moveScene(item.id, left, top)
+      let delta = monitor.getDifferenceFromInitialOffset();
+      let left = Math.round(item.left + delta.x)
+      let top = Math.round(item.top + delta.y)
+      moveScene(item.id, left, top)
       return undefined
     }
   })
 
-  // let moveScene = (id, left, top) => {
-  //   setScenes(update(scenes, {
-  //     [id]: {
-  //       $merge: { left, top },
-  //     },
-  //   }))
-  // }
+  let moveScene = (id, left, top) => {
+    let newScenes = { 
+      ...scenes,
+      [id]: { left, top }
+    }
+    setScenes(newScenes)
+  }
 
   let displayScenes = () => {
     return props.scenes.map((scene) => <Scene 
@@ -36,9 +33,13 @@ function SceneDisplayArea(props) {
       addNewScene={props.addNewScene} 
       story={props.story} 
       scenes={props.scenes} 
-      getNewScenes={props.getNewScenes} 
+      getNewScenes={props.getNewScenes}
+      left={scenes[scene.id] ? scenes[scene.id].left : 0}
+      top={scenes[scene.id] ? scenes[scene.id].top : 0} 
     />)
   }
+
+
 
   return(
     <div className="scene-display">
