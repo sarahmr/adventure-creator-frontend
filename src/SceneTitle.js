@@ -3,7 +3,7 @@ import { useDrag } from 'react-dnd';
 import { ItemTypes } from './Constants';
 
 
-export default function SceneTitle(props){
+export default function SceneTitle(props) {
   let [{ isDragging }, drag] = useDrag({
     item: { type: ItemTypes.SCENE,
             id: props.scene.id,

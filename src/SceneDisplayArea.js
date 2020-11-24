@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Scene from './Scene'
 import { useDrop } from 'react-dnd'
 import { ItemTypes } from './Constants' 
+import Line from './Line'
 
 function SceneDisplayArea(props) {
   let [scenes, setScenes] = useState({
@@ -27,24 +28,53 @@ function SceneDisplayArea(props) {
   }
 
   let displayScenes = () => {
+    console.log(props.scenes, scenes)
     return props.scenes.map((scene) => <Scene 
       key={scene.id} 
       scene={scene} 
-      addNewScene={props.addNewScene} 
+      //addNewScene={props.addNewScene} 
       story={props.story} 
       scenes={props.scenes} 
       getNewScenes={props.getNewScenes}
-      left={scenes[scene.id] ? scenes[scene.id].left : 0}
-      top={scenes[scene.id] ? scenes[scene.id].top : 0} 
+      left={scenes[scene.id] ? scenes[scene.id].left : scene.position.left}
+      top={scenes[scene.id] ? scenes[scene.id].top : scene.position.top} 
     />)
   }
 
+  let renderLines = () => {
+    let lineList = []
+    console.log(scenes)
+    // where scenes are rendered; if a scene is connected through a path -- connect with a line
+    props.scenes.forEach(scene => {
+      // console.log(scene.paths)
+      // if a scene has paths -- connect scene to paths with a line if there isn't one there already
+      if (scene.paths) {
+        scene.paths.forEach(path => {
+          // let scene2 = props.scenes.filter(scene => scene.id === path.scene_id)
+          // why are position and title returning undefined when it's logging the whole object?
+          let scene2 = props.scenes.find(scene => scene.id === path.scene_id)
+          // console.log(scene.position.left, scene.position.top, scene2.position.left, scene2.position.top)
+          lineList.push(<Line 
+            x1={(scenes[scene.id] ? scenes[scene.id].left : scene.position.left) + 100} 
+            y1={(scenes[scene.id] ? scenes[scene.id].top : scene.position.top) + 60} 
+            x2={(scenes[scene2.id] ? scenes[scene2.id].left : scene2.position.left) + 100} 
+            y2={scenes[scene2.id] ? scenes[scene2.id].top : scene2.position.top} 
+            style={{ stroke: 'red', strokeWidth: 2}}  />)
+        })
+      }
+    })
 
+    // console.log(lineList)
+    return lineList
+  }
 
   return(
     <div className="scene-display">
       <div ref={drop} className="scene-drag-area">
         {displayScenes()}
+        <svg style={{ height: "75vh", width: "100%" }}>
+          {renderLines()}
+        </svg>
       </div>
       <div>
         <button className="scene-button" onClick={props.addNewScene}>Add New Scene</button>

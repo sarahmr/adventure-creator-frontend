@@ -32,6 +32,7 @@ a:hover {
   position: sticky;
   top: 0;
   background-color: white;
+  z-index: 2;
 }
 
 .nav-links {
@@ -145,14 +146,16 @@ a.selected {
 
 .story-editor {
   display: grid;
-  grid-template: "options" "display";
-  margin-right: 300px;
-  margin-left: 300px;
+  grid-template: "display options";
+  grid-template-columns: 3fr 1fr;
+  /* margin-right: 300px; */
+  /* margin-left: 300px; */
 }
 
 .story-options {
   grid-area: options;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-content: center;
   padding: 20px;
@@ -162,7 +165,7 @@ a.selected {
 }
 
 .story-options textarea {
-  width: 400px;
+  width: 200px;
   background-color:#f8f9f9;
 }
 
@@ -183,10 +186,12 @@ a.selected {
 }
 
 .scene-drag-area {
-  border: grey 1px solid;
+  border: 1px solid #454545;
+  border-radius: 10px;
   position: relative;
-  height: 600px;
-  width: 800px;
+  height: 75vh;
+  width: auto;
+  margin-bottom: 10px;
 }
 
 .scene-title {
@@ -198,7 +203,8 @@ a.selected {
   flex-direction: column;
   /* background-color:#f8f9f9; */
   background-color: pink;
-  width: fit-content;
+  width: 200px;
+  height: 60px;
   position: absolute;
 }
 
@@ -392,7 +398,7 @@ a.selected {
 }
 
 .title-description input {
-  width: 400px;
+  width: 200px;
   padding: 5px;
   border: 1px solid grey;
   border-radius: 3px;
@@ -528,4 +534,18 @@ textarea {
 .story-details-title h2 {
   margin: 0;
   margin-right: 10px;
+}
+
+.edit-modal {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  right: 50px;
+  background-color: white;
+  border: solid 1px #454545;
+  border-radius: 10px;
+}
+
+.modal-inside {
+  margin: 20px;
 }

@@ -1,14 +1,16 @@
 import React from 'react'
 import Path from './Path'
 import SceneTitle from './SceneTitle'
+import Modal from "react-modal"
 
 class Scene extends React.Component {
 
   state = {
     edit: false,
-    title: `${this.props.scene.title}`,
-    text: `${this.props.scene.text}`,
-    paths: [...this.props.scene.paths]
+    title: this.props.scene.title,
+    text: this.props.scene.text,
+    paths: [...this.props.scene.paths],
+    showModal: false
   }
 
   onChange = (event) => {
@@ -61,7 +63,11 @@ class Scene extends React.Component {
           story_id: `${this.props.story.id}`,
           title: `${path.scene_title}`,
           text: '',
-          paths: []
+          paths: [],
+          position: {
+            left: this.props.left,
+            top: (this.props.top + 200)
+          }
         })
       })
       .then(res => res.json())
@@ -74,10 +80,8 @@ class Scene extends React.Component {
     )
 
     Promise.all(promises).then(() => this.sceneUpdate(paths))
-  
-    this.setState(prevState => ({
-      edit: !prevState.edit
-    }))
+    
+    this.displayForm()
   }
 
   sceneUpdate = (paths) => {
@@ -89,9 +93,13 @@ class Scene extends React.Component {
       },
       body: JSON.stringify({
         story_id: `${this.props.story.id}`,
-        title: `${this.state.title}`,
-        text: `${this.state.text}`,
-        paths: paths
+        title: this.state.title,
+        text: this.state.text,
+        paths: paths,
+        position: {
+          left: this.props.left,
+          top: this.props.top
+        }
       })
     })
     .then(res => res.json())
@@ -114,37 +122,46 @@ class Scene extends React.Component {
 
   displayForm = () => {
     this.setState(prevState => ({
-      edit: !prevState.edit
+      edit: !prevState.edit,
+      showModal: !prevState.showModal
     }))
   }
 
   render(){
+    Modal.setAppElement(document.getElementById("root"))
+
     return(
       <div className="scene">
         <SceneTitle edit={this.state.edit} scene={this.props.scene} displayForm={this.displayForm} top={this.props.top} left={this.props.left} />
-        <div>
-          {this.state.edit ? 
-            <form onSubmit={this.onSubmit} className="scene-form">
-            <div className="scene-info">
-              <label>Scene Title:</label>
-              <input onChange={this.onChange} type="text" name="title" value={this.state.title} />
+        <Modal isOpen={this.state.showModal} className="edit-modal">
+          <div className="modal-inside">
+            <div>
+              <button onClick={this.displayForm}>X</button>
             </div>
-            <div className="scene-info">
-              <label>Text:</label>
-              <textarea rows="4" onChange={this.onChange} name="text" value={this.state.text} ></textarea>
-            </div>
-            <div className="path-area">
-              <h4>Paths:</h4>
-              {this.renderPaths()}
-              <button type="button" onClick={this.addAPath}>+</button>
-            </div>
-            <div className="scene-submit">
-              <input type="submit" value="Save"/>
-            </div>
-          </form>
-          : null 
-          }
-        </div>
+            {this.state.edit ? 
+              <form onSubmit={this.onSubmit} className="scene-form">
+              <div className="scene-info">
+                <label>Scene Title:</label>
+                <input onChange={this.onChange} type="text" name="title" value={this.state.title} />
+              </div>
+              <div className="scene-info">
+                <label>Text:</label>
+                <textarea rows="4" onChange={this.onChange} name="text" value={this.state.text} ></textarea>
+              </div>
+              <div className="path-area">
+                <h4>Paths:</h4>
+                {this.renderPaths()}
+                <button type="button" onClick={this.addAPath}>+</button>
+              </div>
+              <div className="scene-submit">
+                <input type="submit" value="Save"/>
+              </div>
+              </form>
+            : null 
+            }
+          </div>
+        </Modal>
+        
       </div>
     )
   }

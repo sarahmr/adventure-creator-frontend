@@ -29,7 +29,11 @@ class StoryEditor extends React.Component {
       story_id: this.state.story.id,
       title: '',
       text: '',
-      paths: []
+      paths: [],
+      position: {
+        "left": 0,
+        "top": 0
+      }
     }
 
     fetch("http://localhost:3001/scenes", {
@@ -56,6 +60,7 @@ class StoryEditor extends React.Component {
     })
     .then(res => res.json())
     .then(scenes => {
+      // console.log(scenes)
       scenes.sort((a, b) => a.id - b.id)
       this.setState({
         scenes 
