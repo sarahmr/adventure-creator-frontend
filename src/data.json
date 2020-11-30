@@ -38,7 +38,11 @@
             "scene_title": "Inside the House",
             "choice_text": "Walk through the Front Door"
           }
-        ]
+        ],
+        "position": {
+          "left": 0,
+          "top": 0
+        }
       },
       {
         "title": "Yard",

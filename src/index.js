@@ -4,10 +4,14 @@ import './index.css';
 import AdventureCreator from './AdventureCreator';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from 'react-router-dom'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 ReactDOM.render(
   <Router>
-    <AdventureCreator />
+    <DndProvider backend={HTML5Backend} >
+      <AdventureCreator />
+    </DndProvider>
   </Router>,
   document.getElementById('root')
 );
