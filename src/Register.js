@@ -6,7 +6,8 @@ class Register extends React.Component {
     name: '',
     username: '',
     password: '',
-    email: ''
+    email: '',
+    bio: ''
   }
 
   handleForm = (event) => {

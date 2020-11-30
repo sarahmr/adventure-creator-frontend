@@ -6,7 +6,8 @@ class UserStories extends React.Component {
 
   state = {
     stories: [],
-    userProfile: null
+    userProfile: null,
+    edit: "inactive"
   }
 
   componentDidMount(){
@@ -79,6 +80,46 @@ class UserStories extends React.Component {
     />)
   }
 
+  editBio = () => {
+    this.setState({
+      edit: "active"
+    })
+  }
+
+  changeBio = (evt) => {
+    let bio = evt.target.value
+
+    let editedUser = {
+      ...this.state.userProfile,
+      bio: bio
+    }
+  
+    this.setState({
+      userProfile: editedUser
+    })
+  }
+
+  editSubmit = (evt) => {
+    evt.preventDefault()
+
+    fetch(`http://localhost:3001/users/${this.props.match.params.id}`, {
+      method: "PATCH",
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`,
+        "content-type": "application/json"
+      },
+      body: JSON.stringify(this.state.userProfile)
+    })
+    .then(res => res.json())
+    .then((userObj) => {
+      console.log(userObj)
+
+      this.setState({
+        edit: "inactive"
+      })
+    })
+  }
+
   render(){
     if (!(this.props.user && this.state.userProfile)) {
       return null
@@ -90,8 +131,15 @@ class UserStories extends React.Component {
           <div className="user-details">
             <img src={this.state.userProfile.image} alt="author" />
             <h2>Hello {this.state.userProfile.name}!</h2>
-            <p>{this.state.userProfile.bio}</p>
-            <button>Edit Bio</button>
+            { this.state.edit === "inactive" ? 
+              <p>{this.state.userProfile.bio}</p> :
+              <form onSubmit={this.editSubmit}>
+                <label>Edit Your Bio</label>
+                <input onChange={this.changeBio} name="bio" value={this.state.userProfile.bio}></input>
+                <input type="submit" />
+              </form> 
+            }
+            <button onClick={ this.editBio } >Edit Bio</button>
           </div>
           <div className="stories-list">
             <h3>Stories</h3>
