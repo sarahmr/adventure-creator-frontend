@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Scene from './Scene'
 import { useDrop } from 'react-dnd'
 import { ItemTypes } from './Constants' 
@@ -25,11 +25,34 @@ function SceneDisplayArea(props) {
       [id]: { left, top }
     }
     setScenes(newScenes)
-    // patch request to update position on backend
   }
 
+  // patch request to update position on backend
+  useEffect(() => {
+    for (let scene in scenes) {
+      console.log(scene, scenes[scene].top, scenes[scene].left)
+      fetch(`http://localhost:3001/scenes/${scene}`, {
+        method: "PATCH",
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `Bearer ${localStorage.token}`
+        },
+        body: JSON.stringify({
+          position: {
+            top: scenes[scene].top,
+            left: scenes[scene].left
+          }
+        })
+      })
+      .then(res => res.json())
+      .then(sceneObjArr => {
+        // console.log(sceneObjArr)
+      })
+    }
+  })
+
   let displayScenes = () => {
-    console.log(props.scenes, scenes)
+    // console.log(props.scenes, scenes)
     return props.scenes.map((scene) => <Scene 
       key={scene.id} 
       scene={scene} 
@@ -43,14 +66,17 @@ function SceneDisplayArea(props) {
 
   let renderLines = () => {
     let lineList = []
-    console.log(scenes)
+    // console.log(props.scenes)
     // where scenes are rendered; if a scene is connected through a path -- connect with a line
     props.scenes.forEach(scene => {
       // if a scene has paths -- connect scene to paths with a line if there isn't one there already
       if (scene.paths) {
         scene.paths.forEach(path => {
-          let scene2 = props.scenes.find(scene => scene.id === path.scene_id)
+          // console.log(path, props.scenes)
+          let scene2 = props.scenes.find(scene => scene.id === Number(path.scene_id))
+          // console.log(scene2)
           lineList.push(<Line 
+            key={scene2.id + scene.id}
             x1={(scenes[scene.id] ? scenes[scene.id].left : scene.position.left) + 100} 
             y1={(scenes[scene.id] ? scenes[scene.id].top : scene.position.top) + 60} 
             x2={(scenes[scene2.id] ? scenes[scene2.id].left : scene2.position.left) + 100} 

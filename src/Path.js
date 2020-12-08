@@ -17,6 +17,7 @@ class Path extends React.Component {
   }
 
   render(){
+    console.log(this.props.path, "here")
     return(
       <div className="path">
         <div className="path-details">
@@ -27,7 +28,7 @@ class Path extends React.Component {
             this.props.scenes.length > 1 ? 
             <>
             <label><span className="path-details"> or </span></label>
-            <select name="selected_scene" onChange={this.onChange} value={this.props.path.selected_scene}>
+            <select name="selected_scene" onChange={this.onChange} value={this.props.path.scene_id ? this.props.path.scene_id : this.props.path.selected_scene}>
               <option>Select A Scene</option>
               {this.props.scenes.map(scene => 
                 <option key={scene.id} value={scene.id}>{scene.title}</option>

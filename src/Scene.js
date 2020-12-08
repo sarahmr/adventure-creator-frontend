@@ -110,6 +110,7 @@ class Scene extends React.Component {
   }
 
   renderPaths = () => {
+    console.log(this.state.paths)
     return this.state.paths.map((path, index) => <Path key={index} scenes={this.props.scenes} index={index} path={path} onPathChange={this.onPathChange} />)
   }
 
