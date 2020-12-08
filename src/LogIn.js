@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
 class LogIn extends React.Component {
 
@@ -28,6 +28,7 @@ class LogIn extends React.Component {
     .then(data => {
       localStorage.token = data.token
       this.props.handleLogin(data.user, data.image)
+      this.props.history.push('/')
     })
   }
 
@@ -52,4 +53,4 @@ class LogIn extends React.Component {
   }
 }
 
-export default LogIn
+export default withRouter(LogIn)

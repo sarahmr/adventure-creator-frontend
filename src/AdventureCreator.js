@@ -24,6 +24,7 @@ class AdventureCreator extends React.Component {
       })
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         if (!data.error) {
           this.handleLogin(data.user, data.image)
         }
@@ -32,8 +33,12 @@ class AdventureCreator extends React.Component {
   }
 
   handleLogin = (currentUser, image) => {
-   currentUser["image"] = image  
-   this.setState({ currentUser }, () => {this.props.history.push('/')}) 
+   currentUser["image"] = image 
+   this.setState({ currentUser })
+   // if prevState didn't have a user, redirect to main page
+    // , () => {if () {
+    //   this.props.history.push('/')
+    // }}) 
   }
 
   handleLogout = () => {

@@ -25,6 +25,7 @@ function SceneDisplayArea(props) {
       [id]: { left, top }
     }
     setScenes(newScenes)
+    // patch request to update position on backend
   }
 
   let displayScenes = () => {
@@ -32,7 +33,6 @@ function SceneDisplayArea(props) {
     return props.scenes.map((scene) => <Scene 
       key={scene.id} 
       scene={scene} 
-      //addNewScene={props.addNewScene} 
       story={props.story} 
       scenes={props.scenes} 
       getNewScenes={props.getNewScenes}
@@ -46,14 +46,10 @@ function SceneDisplayArea(props) {
     console.log(scenes)
     // where scenes are rendered; if a scene is connected through a path -- connect with a line
     props.scenes.forEach(scene => {
-      // console.log(scene.paths)
       // if a scene has paths -- connect scene to paths with a line if there isn't one there already
       if (scene.paths) {
         scene.paths.forEach(path => {
-          // let scene2 = props.scenes.filter(scene => scene.id === path.scene_id)
-          // why are position and title returning undefined when it's logging the whole object?
           let scene2 = props.scenes.find(scene => scene.id === path.scene_id)
-          // console.log(scene.position.left, scene.position.top, scene2.position.left, scene2.position.top)
           lineList.push(<Line 
             x1={(scenes[scene.id] ? scenes[scene.id].left : scene.position.left) + 100} 
             y1={(scenes[scene.id] ? scenes[scene.id].top : scene.position.top) + 60} 
@@ -64,7 +60,6 @@ function SceneDisplayArea(props) {
       }
     })
 
-    // console.log(lineList)
     return lineList
   }
 
