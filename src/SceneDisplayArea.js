@@ -74,7 +74,7 @@ function SceneDisplayArea(props) {
         scene.paths.forEach(path => {
           // console.log(path, props.scenes)
           let scene2 = props.scenes.find(scene => scene.id === Number(path.scene_id))
-          // console.log(scene2)
+          // console.log(scene, scene2)
           lineList.push(<Line 
             key={scene2.id + scene.id}
             x1={(scenes[scene.id] ? scenes[scene.id].left : scene.position.left) + 100} 

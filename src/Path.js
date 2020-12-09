@@ -9,6 +9,7 @@ class Path extends React.Component {
   }
 
   onChange = (event) => {
+    // console.log(event.target.value)
     this.setState({
       [event.target.name]: event.target.value
     }, () => {
@@ -17,7 +18,7 @@ class Path extends React.Component {
   }
 
   render(){
-    console.log(this.props.path, "here")
+    // console.log(this.props.path, "here")
     return(
       <div className="path">
         <div className="path-details">

@@ -40,17 +40,20 @@ class Scene extends React.Component {
     // create paths for sending to backend (different slighly than state)
     let paths = []
 
+    // console.log(this.state.paths)
     // iterate through paths, if it's scene title need post request to get scene id, if selected scene need path formated as scene_id
     this.state.paths.forEach(path => {
       if (path.scene_title){
         needNewScenePaths.push(path)
       } else {
         paths.push({
-          "scene_id": path.selected_scene,
+          "scene_id": path.selected_scene || path.scene_id,
           "choice_text": path.choice_text
         })
       }
     })
+
+    // console.log(paths)
 
     let promises = needNewScenePaths.map(path => 
       fetch("http://localhost:3001/scenes", {
@@ -110,7 +113,7 @@ class Scene extends React.Component {
   }
 
   renderPaths = () => {
-    console.log(this.state.paths)
+    // console.log(this.state.paths)
     return this.state.paths.map((path, index) => <Path key={index} scenes={this.props.scenes} index={index} path={path} onPathChange={this.onPathChange} />)
   }
 
