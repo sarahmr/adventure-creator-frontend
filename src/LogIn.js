@@ -45,7 +45,7 @@ class LogIn extends React.Component {
             <label>Password: </label>
           <input type="password" name='password' value={this.state.password} onChange={this.handleForm} ></input>
           </div>
-          <input type='submit'></input>
+          <input class="user-forms-submit" type='submit'></input>
         </form>
       <p>Need an account? Register <Link to='/register' >here</Link></p>
       </div>

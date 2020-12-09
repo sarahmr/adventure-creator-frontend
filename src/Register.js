@@ -54,9 +54,13 @@ class Register extends React.Component {
           </div>
           <div>
             <label>Password: </label>
-          <input type="password" name='password' value={this.state.password} onChange={this.handleForm} ></input>
+            <input type="password" name='password' value={this.state.password} onChange={this.handleForm} ></input>
           </div>
-          <input type='submit'></input>
+          <div>
+            <label>Bio: </label>
+            <textarea rows="4" type="text" name="bio" value={this.state.bio} onChange={this.handleForm} ></textarea>
+          </div>
+          <input class="user-forms-submit" type='submit'></input>
         </form>
       </div>
     )

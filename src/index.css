@@ -314,6 +314,11 @@ a.selected {
   align-items: center;
 }
 
+.user-forms h2 {
+  margin: 0;
+  margin-top: 20px;
+}
+
 .user-forms form {
   display: flex;
   flex-direction: column;
@@ -322,6 +327,24 @@ a.selected {
 
 .user-forms form div {
   margin: 5px;
+}
+
+.user-forms form label {
+  display: block;
+}
+
+.user-forms form input {
+  width: 200px;
+  padding: 5px;
+}
+
+.user-forms form textarea {
+  width: 200px;
+  padding: 5px;
+}
+
+.user-forms-submit {
+  width: 75px;
 }
 
 .user-details {
