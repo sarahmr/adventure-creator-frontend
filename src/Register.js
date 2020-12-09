@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 
 class Register extends React.Component {
 
@@ -7,7 +8,8 @@ class Register extends React.Component {
     username: '',
     password: '',
     email: '',
-    bio: ''
+    bio: '',
+    error: false
   }
 
   handleForm = (event) => {
@@ -29,9 +31,18 @@ class Register extends React.Component {
     .then(res => res.json())
     .then(data => {
       console.log(data)
-      let { user, token, image } = data
-      this.props.handleLogin(user, image)
-      localStorage.token = token
+      if (data.error) {
+        console.log(data.error)
+        // display error message
+        this.setState({
+          error: true
+        })
+      } else {
+        let { user, token, image } = data
+        this.props.handleLogin(user, image)
+        localStorage.token = token
+        this.props.history.push(`/author/${user.id}`)
+      }
     })
   }
 
@@ -39,6 +50,9 @@ class Register extends React.Component {
     return (
       <div className="user-forms">
         <h2>Create an Account</h2>
+        <div>
+          <p className="error-message" >{this.state.error && "Username has already been taken"}</p>
+        </div>
         <form onSubmit={this.handleSubmit} >
           <div>
             <label>Name: </label>
@@ -60,11 +74,11 @@ class Register extends React.Component {
             <label>Bio: </label>
             <textarea rows="4" type="text" name="bio" value={this.state.bio} onChange={this.handleForm} ></textarea>
           </div>
-          <input class="user-forms-submit" type='submit'></input>
+          <input className="user-forms-submit" type='submit'></input>
         </form>
       </div>
     )
   }
 }
 
-export default Register
+export default withRouter(Register)

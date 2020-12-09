@@ -5,7 +5,8 @@ class LogIn extends React.Component {
 
   state = {
     username: '',
-    password: ''
+    password: '',
+    error: false
   }
 
   handleForm = (event) => {
@@ -26,9 +27,20 @@ class LogIn extends React.Component {
     })
     .then(res => res.json())
     .then(data => {
-      localStorage.token = data.token
-      this.props.handleLogin(data.user, data.image)
-      this.props.history.push('/')
+      if (data.error) {
+        console.log(data.error)
+        // display error message
+        this.setState({
+          error: true
+        })
+      } else {
+        localStorage.token = data.token
+        this.props.handleLogin(data.user, data.image)
+        this.props.history.push('/')
+      }
+    })
+    .catch(error => {
+      console.log(error)
     })
   }
 
@@ -36,6 +48,9 @@ class LogIn extends React.Component {
     return (
       <div className="user-forms">
         <h2>Log In</h2>
+        <div>
+          <p className="error-message" >{this.state.error && "Incorrect username or password"}</p>
+        </div>
         <form onSubmit={this.handleSubmit} >
           <div>
             <label>Username: </label>
@@ -43,9 +58,9 @@ class LogIn extends React.Component {
           </div>
           <div>
             <label>Password: </label>
-          <input type="password" name='password' value={this.state.password} onChange={this.handleForm} ></input>
+            <input type="password" name='password' value={this.state.password} onChange={this.handleForm} ></input>
           </div>
-          <input class="user-forms-submit" type='submit'></input>
+          <input className="user-forms-submit" type='submit'></input>
         </form>
       <p>Need an account? Register <Link to='/register' >here</Link></p>
       </div>
