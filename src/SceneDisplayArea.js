@@ -30,7 +30,7 @@ function SceneDisplayArea(props) {
   // patch request to update position on backend
   useEffect(() => {
     for (let scene in scenes) {
-      console.log(scene, scenes[scene].top, scenes[scene].left)
+      // console.log(scene, scenes[scene].top, scenes[scene].left)
       fetch(`http://localhost:3001/scenes/${scene}`, {
         method: "PATCH",
         headers: {

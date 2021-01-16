@@ -1,5 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
+import RightArrow from './assets/angle-double-right-solid.svg'
 
 class StoryOptions extends React.Component {
 
@@ -49,7 +50,7 @@ class StoryOptions extends React.Component {
     })
     .then(res => res.json())
     .then(storyObj => {
-      console.log(storyObj)
+      // console.log(storyObj)
       this.setState({message: "Saved!"})
       setTimeout(() => this.setState({message: ''}), 1500)
     })
@@ -69,9 +70,16 @@ class StoryOptions extends React.Component {
     })
   }
 
+  collapse = () => {
+    this.props.sidebarDisplay()
+  }
+
   render(){
     return (
       <div className="story-options">
+        <button className="side-collapse-button" onClick={this.collapse} >
+          <img className="side-collapse" src={ RightArrow } />
+        </button>
         <div className="title-description">
           <div>
             <label>Story Title:</label><br/>

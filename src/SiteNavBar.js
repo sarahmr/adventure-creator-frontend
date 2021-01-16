@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink, withRouter } from 'react-router-dom'
-import CompassLogo from './compass.png'
+import CompassLogo from './assets/compass.png'
 
 class SiteNavBar extends React.Component {
 

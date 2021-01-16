@@ -147,7 +147,7 @@ a.selected {
 .story-editor {
   display: grid;
   grid-template: "display options";
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: auto min-content;
   /* margin-right: 300px; */
   /* margin-left: 300px; */
 }
@@ -156,7 +156,7 @@ a.selected {
   grid-area: options;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-content: center;
   padding: 20px;
   margin: 10px;
@@ -172,6 +172,38 @@ a.selected {
 .story-options button {
   width: auto;
   align-self: center;
+}
+
+button.side-collapse-button {
+  background-color: #f8f9f9;
+  align-self: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+.side-collapse {
+  width: 20px;
+  opacity: 0.3;
+}
+
+.side-collapse:hover {
+  opacity: 0.9;
+}
+
+.side-collapse-button:hover {
+  box-shadow: none;
+}
+
+.story-options-collapsed {
+  grid-area: options;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  align-content: center;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 10px;
+  background-color: #f8f9f9;
 }
 
 .scene-display {
@@ -428,6 +460,7 @@ a.selected {
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
+  margin-top: auto;
 }
 
 .publish-save button {

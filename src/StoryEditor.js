@@ -2,12 +2,14 @@ import React from 'react';
 import SceneDisplayArea from './SceneDisplayArea'
 import StoryOptions from './StoryOptions'
 import { withRouter } from 'react-router-dom'
+import StoryOptionsCollapsed from './StoryOptionsCollapsed'
 
 class StoryEditor extends React.Component {
 
   state = {
     story: null,
-    scenes: []
+    scenes: [],
+    sidebar: true
   }
 
   // fetch the newly created story from url
@@ -67,12 +69,23 @@ class StoryEditor extends React.Component {
       })
     })
   }
+
+  sidebarDisplay = () => {
+    this.setState(prevState => ({
+      sidebar: !prevState.sidebar
+    }))
+  }
   
 
   render() {
     return (
       <div className="story-editor">
-        <StoryOptions story={this.state.story} />
+        { this.state.sidebar? 
+          <StoryOptions story={this.state.story} sidebarDisplay={this.sidebarDisplay} /> 
+          : 
+          <StoryOptionsCollapsed sidebarDisplay={this.sidebarDisplay} />
+        }
+        {/* <StoryOptions story={this.state.story} /> */}
         <SceneDisplayArea scenes={this.state.scenes} addNewScene={this.addNewScene} story={this.state.story} getNewScenes={this.getNewScenes} />
       </div>
     )
