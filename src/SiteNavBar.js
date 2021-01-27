@@ -9,7 +9,7 @@ class SiteNavBar extends React.Component {
       <header className="navbar">
         <div className="logo" onClick={() => this.props.history.push('/')}>
           <img src={ CompassLogo } alt="compass" height="75px" />
-          <h2 className="site-title" >Adventure Creator</h2>
+          <h2 className="site-title" >Labyrinth</h2>
         </div>
         <div className="nav-links">
           <NavLink className="nav-link" activeClassName="selected" exact to="/" >See all Stories</NavLink>

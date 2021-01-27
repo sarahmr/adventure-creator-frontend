@@ -228,16 +228,19 @@ button.side-collapse-button {
 
 .scene-title {
   border-radius: 10px;
-  margin-bottom: 20px;
-  padding: 20px;
+  /* margin-bottom: 20px; */
+  padding: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   flex-direction: column;
-  /* background-color:#f8f9f9; */
-  background-color: pink;
-  width: 100px;
-  height: 30px;
+  background-color: #ff9780;
+  /* background-color: pink; */
+  width: 70px;
+  height: 80px;
   position: absolute;
+  color: white;
+  align-items: center;
+  border: 1px solid lightgrey;
 }
 
 .scene button {
@@ -249,29 +252,32 @@ button.side-collapse-button {
   margin-right: 5px;
 }
 
-.scene-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .scene-title h3 {
   margin: 0;
+  font-size: .9em;
 }
 
 .scene-title button {
   margin: 0;
   background-color: #e7e7e7;
   color: grey;
+  font-size: 12px;
 }
 
 .scene-form {
   display: flex;
   flex-direction: column;
   align-content: center;
+  margin-top: 20px;
+}
+
+.scene-info {
+  margin-left: 50px;
+  margin-right: 50px;
 }
 
 .scene-info input {
+  margin: 5px;
   width: 500px;
   background-color:#f8f9f9;
   border-radius: 3px;
@@ -280,6 +286,7 @@ button.side-collapse-button {
 }
 
 .scene-info textarea {
+  margin: 5px;
   background-color:#f8f9f9;
 }
 
@@ -292,7 +299,14 @@ button.side-collapse-button {
 }
 
 .path-area {
-  margin: 5px;
+  /* margin: 5px; */
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 20px;
+}
+
+.path-area h4 {
+  margin-bottom: 5px;
 }
 
 .path-area button {
@@ -520,6 +534,7 @@ input[type="submit"]:focus {
 .scene-submit {
   display: flex;
   justify-content: flex-end;
+  margin: 10px;
 }
 
 .review-form {
@@ -589,14 +604,14 @@ textarea {
 
 .edit-modal {
   position: absolute;
-  top: 50px;
-  left: 50px;
-  right: 50px;
+  top: 100px;
+  left: 25vw;
+  right: auto;
   background-color: white;
   border: solid 1px #454545;
   border-radius: 10px;
 }
 
-.modal-inside {
-  margin: 20px;
+.exit-modal-button {
+  margin: 10px;
 }

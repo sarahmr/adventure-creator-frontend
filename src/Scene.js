@@ -54,6 +54,21 @@ class Scene extends React.Component {
     })
 
     // console.log(paths)
+    if (needNewScenePaths.length > 1) {
+      // set left positions to be props.left first then add 50 each time
+      for (let i = 0; i < needNewScenePaths.length; i++) {
+        needNewScenePaths[i].position = {left: 0, top: 0}
+        if (i === 0) {
+          // console.log(this.props.left)
+          needNewScenePaths[i].position.left = this.props.left
+        } else {
+          // console.log(needNewScenePaths[i - 1].position.left)
+          needNewScenePaths[i].position.left = needNewScenePaths[i - 1].position.left + 75
+        }
+        // console.log(needNewScenePaths[i].position.left)
+      }
+      // console.log(needNewScenePaths)
+    }
 
     let promises = needNewScenePaths.map(path => 
       fetch("http://localhost:3001/scenes", {
@@ -68,8 +83,8 @@ class Scene extends React.Component {
           text: '',
           paths: [],
           position: {
-            left: this.props.left,
-            top: (this.props.top + 200)
+            left: path.position.left,
+            top: (this.props.top + 150)
           }
         })
       })
@@ -131,15 +146,27 @@ class Scene extends React.Component {
     }))
   }
 
+  
+
   render(){
     Modal.setAppElement(document.getElementById("root"))
 
     return(
       <div className="scene">
-        <SceneTitle edit={this.state.edit} scene={this.props.scene} displayForm={this.displayForm} top={this.props.top} left={this.props.left} />
-        <Modal isOpen={this.state.showModal} className="edit-modal">
+        <SceneTitle 
+          edit={this.state.edit} 
+          scene={this.props.scene} 
+          displayForm={this.displayForm} 
+          top={this.props.top} 
+          left={this.props.left} 
+          // hideSourceOnDrag={this.props.hideSourceOnDrag} 
+          />
+        <Modal 
+          isOpen={this.state.showModal} 
+          onRequestClose={this.displayForm} 
+          className="edit-modal">
           <div className="modal-inside">
-            <div>
+            <div className="exit-modal-button">
               <button onClick={this.displayForm}>X</button>
             </div>
             {this.state.edit ? 

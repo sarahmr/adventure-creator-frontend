@@ -8,6 +8,8 @@ function SceneDisplayArea(props) {
   let [scenes, setScenes] = useState({
   })
 
+  // let [hideSourceOnDrag, useHideSourceOnDrag] = useState(true)
+
   let [, drop] = useDrop({
     accept: ItemTypes.SCENE,
     drop(item, monitor) {
@@ -53,6 +55,10 @@ function SceneDisplayArea(props) {
 
   let displayScenes = () => {
     // console.log(props.scenes, scenes)
+    // if scenes have the same left and the same top, add 100 to left
+
+    // console.log(props.scenes)
+
     return props.scenes.map((scene) => <Scene 
       key={scene.id} 
       scene={scene} 
@@ -61,10 +67,11 @@ function SceneDisplayArea(props) {
       getNewScenes={props.getNewScenes}
       left={scenes[scene.id] ? scenes[scene.id].left : scene.position.left}
       top={scenes[scene.id] ? scenes[scene.id].top : scene.position.top} 
+      // hideSourceOnDrag={hideSourceOnDrag}
     />)
   }
 
-  let renderLines = () => {
+  let renderLines = () => { 
     let lineList = []
     // console.log(props.scenes)
     // where scenes are rendered; if a scene is connected through a path -- connect with a line
@@ -77,11 +84,11 @@ function SceneDisplayArea(props) {
           // console.log(scene, scene2)
           lineList.push(<Line 
             key={scene2.id + scene.id}
-            x1={(scenes[scene.id] ? scenes[scene.id].left : scene.position.left) + 100} 
-            y1={(scenes[scene.id] ? scenes[scene.id].top : scene.position.top) + 60} 
-            x2={(scenes[scene2.id] ? scenes[scene2.id].left : scene2.position.left) + 100} 
+            x1={(scenes[scene.id] ? scenes[scene.id].left : scene.position.left) + 45} 
+            y1={(scenes[scene.id] ? scenes[scene.id].top : scene.position.top) + 100} 
+            x2={(scenes[scene2.id] ? scenes[scene2.id].left : scene2.position.left) + 45} 
             y2={scenes[scene2.id] ? scenes[scene2.id].top : scene2.position.top} 
-            style={{ stroke: 'red', strokeWidth: 2}}  />)
+            style={{ stroke: '#e7e7e7', strokeWidth: 2}}  />)
         })
       }
     })
