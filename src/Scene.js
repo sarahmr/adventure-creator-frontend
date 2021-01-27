@@ -57,13 +57,13 @@ class Scene extends React.Component {
     if (needNewScenePaths.length > 1) {
       // set left positions to be props.left first then add 50 each time
       for (let i = 0; i < needNewScenePaths.length; i++) {
-        needNewScenePaths[i].position = {left: 0, top: 0}
+        needNewScenePaths[i].position = {}
         if (i === 0) {
           // console.log(this.props.left)
           needNewScenePaths[i].position.left = this.props.left
         } else {
           // console.log(needNewScenePaths[i - 1].position.left)
-          needNewScenePaths[i].position.left = needNewScenePaths[i - 1].position.left + 75
+          needNewScenePaths[i].position.left = needNewScenePaths[i - 1].position.left + 100
         }
         // console.log(needNewScenePaths[i].position.left)
       }

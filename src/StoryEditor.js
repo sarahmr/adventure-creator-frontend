@@ -33,8 +33,8 @@ class StoryEditor extends React.Component {
       text: '',
       paths: [],
       position: {
-        "left": 0,
-        "top": 0
+        "left": 200,
+        "top": 50
       }
     }
 
@@ -76,12 +76,15 @@ class StoryEditor extends React.Component {
     }))
   }
   
+  updateStory = (story) => {
+    this.setState({ story })
+  }
 
   render() {
     return (
       <div className="story-editor">
         { this.state.sidebar? 
-          <StoryOptions story={this.state.story} sidebarDisplay={this.sidebarDisplay} /> 
+          <StoryOptions story={this.state.story} sidebarDisplay={this.sidebarDisplay} updateStory={this.updateStory} /> 
           : 
           <StoryOptionsCollapsed sidebarDisplay={this.sidebarDisplay} />
         }

@@ -11,6 +11,16 @@ class StoryOptions extends React.Component {
     message: ''
   }
 
+  componentDidMount() {
+    if (this.props.story) {
+      this.setState({
+        title: this.props.story.title,
+        published: this.props.story.published,
+        brief_description: this.props.story.brief_description
+      })
+    }
+  }
+
   componentDidUpdate(prevProps){
     if (prevProps.story !== this.props.story) {
       this.setState({
@@ -52,6 +62,7 @@ class StoryOptions extends React.Component {
     .then(storyObj => {
       // console.log(storyObj)
       this.setState({message: "Saved!"})
+      this.props.updateStory(storyObj)
       setTimeout(() => this.setState({message: ''}), 1500)
     })
   }
