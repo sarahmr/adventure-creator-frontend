@@ -1,84 +1,117 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
+import React, { useState } from "react";
+import { withRouter, redirect } from "react-router-dom";
 
-class Register extends React.Component {
+export default function Register() {
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
+  const [error, setError] = useState(false);
 
-  state ={
-    name: '',
-    username: '',
-    password: '',
-    email: '',
-    bio: '',
-    error: false
-  }
+  const handleForm = (event) => {
+    if (event.target.name === "name") {
+      setName(event.target.value);
+    } else if (event.target.name === "username") {
+      setUsername(event.target.value);
+    } else if (event.target.name === "password") {
+      setPassword(event.target.value);
+    } else if (event.target.name === "email") {
+      setEmail(event.target.value);
+    } else if (event.target.name === "bio") {
+      setBio(event.target.value);
+    }
+  };
 
-  handleForm = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    })
-  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-  handleSubmit = (event) => {
-    event.preventDefault()
-
-    fetch('http://localhost:3001/users', {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/users`, {
       method: "POST",
       headers: {
-        'content-type': 'application/json'
+        "content-type": "application/json",
       },
-      body: JSON.stringify(this.state)
+      body: JSON.stringify({
+        name: name,
+        username: username,
+        password: password,
+        email: email,
+        bio: bio,
+      }),
     })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data)
-      if (data.error) {
-        console.log(data.error)
-        // display error message
-        this.setState({
-          error: true
-        })
-      } else {
-        let { user, token, image } = data
-        this.props.handleLogin(user, image)
-        localStorage.token = token
-        this.props.history.push(`/author/${user.id}`)
-      }
-    })
-  }
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.error) {
+          console.log(data.error);
+          // display error message
+          setError(true);
+        } else {
+          let { user, token, image } = data;
+          // this.props.handleLogin(user, image);
+          localStorage.token = token;
+          redirect(`/author/${user.id}`);
+        }
+      });
+  };
 
-  render(){
-    return (
-      <div className="user-forms">
-        <h2>Create an Account</h2>
-        <div>
-          <p className="error-message" >{this.state.error && "Username has already been taken"}</p>
-        </div>
-        <form onSubmit={this.handleSubmit} >
-          <div>
-            <label>Name: </label>
-            <input type="text" name="name" value={this.state.name} onChange={this.handleForm} ></input>
-          </div>
-          <div>
-            <label>Email: </label>
-            <input type="text" name="email" value={this.state.email} onChange={this.handleForm} ></input>
-          </div>
-          <div>
-            <label>Username: </label>
-            <input type='text' name='username' value={this.state.username} onChange={this.handleForm} ></input>
-          </div>
-          <div>
-            <label>Password: </label>
-            <input type="password" name='password' value={this.state.password} onChange={this.handleForm} ></input>
-          </div>
-          <div>
-            <label>Bio: </label>
-            <textarea rows="4" type="text" name="bio" value={this.state.bio} onChange={this.handleForm} ></textarea>
-          </div>
-          <input className="user-forms-submit" type='submit'></input>
-        </form>
+  return (
+    <div className="user-forms">
+      <h2>Create an Account</h2>
+      <div>
+        <p className="error-message">
+          {error && "Username has already been taken"}
+        </p>
       </div>
-    )
-  }
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name: </label>
+          <input
+            type="text"
+            name="name"
+            value={name}
+            onChange={handleForm}
+          ></input>
+        </div>
+        <div>
+          <label>Email: </label>
+          <input
+            type="text"
+            name="email"
+            value={email}
+            onChange={handleForm}
+          ></input>
+        </div>
+        <div>
+          <label>Username: </label>
+          <input
+            type="text"
+            name="username"
+            value={username}
+            onChange={handleForm}
+          ></input>
+        </div>
+        <div>
+          <label>Password: </label>
+          <input
+            type="password"
+            name="password"
+            value={password}
+            onChange={handleForm}
+          ></input>
+        </div>
+        <div>
+          <label>Bio: </label>
+          <textarea
+            rows="4"
+            type="text"
+            name="bio"
+            value={bio}
+            onChange={handleForm}
+          ></textarea>
+        </div>
+        <input className="user-forms-submit" type="submit"></input>
+      </form>
+    </div>
+  );
 }
-
-export default withRouter(Register)

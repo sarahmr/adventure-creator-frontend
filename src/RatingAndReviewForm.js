@@ -1,89 +1,97 @@
-import React from 'react'
+import React, { useState } from "react";
 
-class RatingAndReviewForm extends React.Component {
+export default function RatingAndReviewForm(props) {
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
 
-  state = {
-    rating: 0,
-    reviewText: ''
-  }
+  const handleReviewText = (event) => {
+    setReviewText(event.target.value);
+  };
 
-  handleReview = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    })
-  }
+  const handleStars = (num) => {
+    setRating(num);
+  };
 
-  handleStars = (num) => {
-    this.setState({
-      rating: num
-    })
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault()
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
     // ratings and reviews need user_id and story_id
-    fetch("http://localhost:3001/reviews", {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/reviews`, {
       method: "POST",
       headers: {
-        'Authorization': `Bearer ${localStorage.token}`,
-        'content-type': 'application/json'
+        Authorization: `Bearer ${localStorage.token}`,
+        "content-type": "application/json",
       },
       body: JSON.stringify({
-        story_id: this.props.story.id,
-        user_id: this.props.user.id,
-        review: this.state.reviewText,
-        rating: this.state.rating
-      })
+        story_id: props.story.id,
+        user_id: props.user.id,
+        review: reviewText,
+        rating: rating,
+      }),
     })
-    .then(res => res.json())
-    .then(reviewObj => {
-      console.log(reviewObj)
-      this.props.getNewReviews(reviewObj)
-    })
+      .then((res) => res.json())
+      .then((reviewObj) => {
+        console.log(reviewObj);
+        props.getNewReviews(reviewObj);
+      });
+    setRating(0);
+    setReviewText("");
+  };
 
-    this.setState({
-      rating: 0,
-      reviewText: ''
-    })
-  }
-
-  render() {
-    return (
-      <div>
-        <form onSubmit={this.handleSubmit} className="review-form">
-          <div className="review-title">
-            <h4>Leave a Review:</h4>
-          </div>
-          <div className="review-content-rating">
-            <h2>
-              <span onClick={() => this.handleStars(1)} className={this.state.rating >= 1 ? "filled-stars" : 'empty-stars'} >
-                { this.state.rating >= 1 ? '★' : '☆' }
-              </span>
-              <span onClick={() => this.handleStars(2)} className={this.state.rating >= 2 ? "filled-stars" : 'empty-stars'} >
-                { this.state.rating >= 2 ? '★' : '☆' }
-              </span>
-              <span onClick={() => this.handleStars(3)} className={this.state.rating >= 3 ? "filled-stars" : 'empty-stars'} >
-                { this.state.rating >= 3 ? '★' : '☆' }
-              </span>
-              <span onClick={() => this.handleStars(4)} className={this.state.rating >= 4 ? "filled-stars" : 'empty-stars'} >
-                { this.state.rating >= 4 ? '★' : '☆' }
-              </span>
-              <span onClick={() => this.handleStars(5)} className={this.state.rating >= 5 ? "filled-stars" : 'empty-stars'} >
-                { this.state.rating >= 5 ? '★' : '☆' }
-              </span>
-            </h2>
-          </div>
-          <div className="review-content-review">
-            <textarea placeholder="Your thoughts..." rows="3" type="text" name="reviewText" value={this.state.reviewText} onChange={this.handleReview} />
-          </div>
-          <div className="review-submit">
-            <input type="submit" />
-          </div>
-        </form>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <form onSubmit={handleSubmit} className="review-form">
+        <div className="review-title">
+          <h4>Leave a Review:</h4>
+        </div>
+        <div className="review-content-rating">
+          <h2>
+            <span
+              onClick={() => handleStars(1)}
+              className={rating >= 1 ? "filled-stars" : "empty-stars"}
+            >
+              {rating >= 1 ? "★" : "☆"}
+            </span>
+            <span
+              onClick={() => handleStars(2)}
+              className={rating >= 2 ? "filled-stars" : "empty-stars"}
+            >
+              {rating >= 2 ? "★" : "☆"}
+            </span>
+            <span
+              onClick={() => handleStars(3)}
+              className={rating >= 3 ? "filled-stars" : "empty-stars"}
+            >
+              {rating >= 3 ? "★" : "☆"}
+            </span>
+            <span
+              onClick={() => handleStars(4)}
+              className={rating >= 4 ? "filled-stars" : "empty-stars"}
+            >
+              {rating >= 4 ? "★" : "☆"}
+            </span>
+            <span
+              onClick={() => handleStars(5)}
+              className={rating >= 5 ? "filled-stars" : "empty-stars"}
+            >
+              {rating >= 5 ? "★" : "☆"}
+            </span>
+          </h2>
+        </div>
+        <div className="review-content-review">
+          <textarea
+            placeholder="Your thoughts..."
+            rows="3"
+            type="text"
+            name="reviewText"
+            value={reviewText}
+            onChange={handleReviewText}
+          />
+        </div>
+        <div className="review-submit">
+          <input type="submit" />
+        </div>
+      </form>
+    </div>
+  );
 }
-
-export default RatingAndReviewForm

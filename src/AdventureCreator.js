@@ -1,108 +1,98 @@
-import React from 'react';
-import StoryEditor from './StoryEditor'
-import SiteNavBar from './SiteNavBar'
-import StoriesList from './StoriesList'
-import PlayArea from './PlayArea'
-import { Switch, Route, withRouter } from 'react-router-dom'
-import LogIn from './LogIn'
-import UserStories from './UserStories'
-import Register from './Register'
-import StoryDetails from './StoryDetails'
+import React, { useEffect, useState } from "react";
+import StoryEditor from "./StoryEditor";
+import SiteNavBar from "./SiteNavBar";
+import StoriesList from "./StoriesList";
+import PlayArea from "./PlayArea";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import LogIn from "./LogIn";
+import UserStories from "./UserStories";
+import Register from "./Register";
+import StoryDetails from "./StoryDetails";
 
-class AdventureCreator extends React.Component {
+export default function AdventureCreator() {
+  const [currentUser, setCurrentUser] = useState(null);
+  let navigate = useNavigate();
 
-  state = {
-    currentUser: null
-  }
-
-  componentDidMount(){
-    if (localStorage.token){
-      fetch('http://localhost:3001/autologin', {
+  useEffect(() => {
+    if (localStorage.token) {
+      fetch(`${process.env.REACT_APP_SERVER_URL}/autologin`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.token}`
-        }
+          Authorization: `Bearer ${localStorage.token}`,
+        },
       })
-      .then(res => res.json())
-      .then(data => {
-        if (!data.error) {
-          this.handleLogin(data.user, data.image)
-        }
-      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.error) {
+            handleLogin(data.user, data.image);
+          }
+        });
     }
-  }
+  });
 
-  handleLogin = (currentUser, image) => {
-   currentUser["image"] = image 
-   this.setState({ currentUser })
-  }
+  const handleLogin = (user, image) => {
+    user["image"] = image;
+    setCurrentUser({ user });
+  };
 
-  handleLogout = () => {
-    localStorage.removeItem("token")
-    this.setState({
-      currentUser: null
-    }, () => {this.props.history.push('/')})
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setCurrentUser(
+      {
+        currentUser: null,
+      },
+      () => {
+        navigate("/");
+      }
+    );
+  };
 
-  createStory = (event) => {
-    event.preventDefault()
-    // create a story 
-    fetch('http://localhost:3001/stories', {
+  const createStory = (event) => {
+    event.preventDefault();
+    // create a story
+    fetch(`${process.env.REACT_APP_SERVER_URL}/stories`, {
       method: "POST",
       headers: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.token}`,
       },
       body: JSON.stringify({
-        title: '',
+        title: "",
         published: false,
-        user_id: `${this.state.currentUser.id}`,
-        brief_description: ''
-      })
+        user_id: `${currentUser.id}`,
+        brief_description: "",
+      }),
     })
-    .then(res => res.json())
-    .then(newStory => {
-      this.props.history.push(`/edit/${newStory.id}`)
-    })
-  }
+      .then((res) => res.json())
+      .then((newStory) => {
+        navigate(`/edit/${newStory.id}`);
+      });
+  };
 
-  render(){
-    return (
-      <div>
-        <SiteNavBar 
-          handleLogout={this.handleLogout} 
-          user={this.state.currentUser} 
-          createStory={this.createStory} 
+  return (
+    <>
+      <SiteNavBar
+        handleLogout={handleLogout}
+        user={currentUser}
+        createStory={createStory}
+      />
+      <Routes>
+        <Route path="/login" element={<LogIn handleLogin={handleLogin} />} />
+        <Route path="/edit/:id" element={<StoryEditor />} />
+        <Route
+          path="/story/:id"
+          element={<StoryDetails user={currentUser} />}
         />
-        <Switch>
-          <Route path='/login'>
-            <LogIn handleLogin={this.handleLogin} />
-          </Route>
-          <Route path='/edit/:id' >
-            <StoryEditor />
-          </Route>
-          <Route path='/story/:id'>
-            <StoryDetails 
-              user={this.state.currentUser}
-            />
-          </Route>
-          <Route path="/play/:id" >
-            <PlayArea />
-          </Route> 
-          <Route path='/author/:id' >
-            <UserStories 
-              user={this.state.currentUser}
-            />
-          </Route>
-          <Route path='/register' >
-            <Register handleLogin={this.handleLogin} />
-          </Route>
-          <Route path="/" >
-            <StoriesList />
-          </Route>
-        </Switch>
-      </div>
-    );
-  }
+        <Route path="/play/:id" element={<PlayArea />} />
+        <Route
+          path="/author/:id"
+          element={<UserStories user={currentUser} />}
+        />
+        <Route
+          path="/register"
+          element={<Register handleLogin={handleLogin} />}
+        />
+        <Route path="/" element={<StoriesList />} />
+      </Routes>
+    </>
+  );
 }
-
-export default withRouter(AdventureCreator);

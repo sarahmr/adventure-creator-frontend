@@ -1,76 +1,91 @@
-import React from 'react'
-import { withRouter, Link } from 'react-router-dom'
-import RatingAndReviewForm from './RatingAndReviewForm'
-import Review from './Review'
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import RatingAndReviewForm from "./RatingAndReviewForm";
+import Review from "./Review";
 
-class StoryDetails extends React.Component {
+export default function StoryDetails(props) {
+  const navigate = useNavigate();
+  const [story, setStory] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
-  state = {
-    story: null, 
-    reviews: []
-  }
-
-  componentDidMount() {
-    fetch(`http://localhost:3001/stories/${this.props.match.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
+  useEffect(() => {
+    fetch(
+      `${process.env.REACT_APP_SERVER_URL}/stories/${props.match.params.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
       }
-    })
-    .then(res => res.json())
-    .then(storyObj => {
-      this.setState({
-        story: storyObj,
-        reviews: storyObj.reviews
-      })
-    })
-  }
-
-  startStory = (id) => {
-    this.props.history.push(`/play/${id}`)
-  }
-
-  getNewReviews = (reviewObj) => {
-    // add new review to state
-    this.setState({
-      reviews: [...this.state.reviews, reviewObj]
-    })
-  }
-
-  renderReviews = () => {
-    return this.state.reviews.map(review => <Review key={review.id} review={review} />)
-  }
-
-  render() {
-    if (!(this.state.story && this.props.user)) {
-      return null
-    }
-    return (
-      <div>
-        <div className="story-details">
-          <div className="story-details-title">
-            <h2>{this.state.story.title}</h2>
-            { this.props.user.id === this.state.story.user.id && <> { this.state.story.published ? <p className="status" style={{backgroundColor: "#79d3a5" }}> Published</p> : <p className="status">Draft</p> } </> }
-          </div>
-            <h4><span>Written by </span> 
-              <Link to={`/author/${this.state.story.user.id}`}>{this.state.story.user.name}</Link>
-            </h4>
-            { this.props.user.id === this.state.story.user.id && 
-            <div className="edit-details"> 
-              <button onClick={() => {this.props.history.push(`/edit/${this.state.story.id}`)}} >Edit Story</button> 
-            </div> 
-            } 
-          <p>Synopsis: {this.state.story.brief_description}</p>
-        </div>
-        <div className="story-buttons" >
-          <button onClick={() => this.startStory(this.state.story.id)} >Play</button>
-        </div>
-        <div className="reviews">
-          <RatingAndReviewForm story={this.state.story} user={this.props.user} getNewReviews={this.getNewReviews} />
-          {this.renderReviews()}
-        </div>
-      </div>
     )
-  }
-}
+      .then((res) => res.json())
+      .then((storyObj) => {
+        setStory(storyObj);
+        setReviews(storyObj.reviews);
+      });
+  }, [story, reviews, props.match.params.id]);
 
-export default withRouter(StoryDetails)
+  const startStory = (id) => {
+    navigate(`/play/${id}`);
+  };
+
+  const getNewReviews = (reviewObj) => {
+    setReviews([...reviews, reviewObj]);
+  };
+
+  const renderReviews = () => {
+    return reviews.map((review) => <Review key={review.id} review={review} />);
+  };
+
+  if (!(story && props.user)) {
+    return null;
+  }
+  return (
+    <div>
+      <div className="story-details">
+        <div className="story-details-title">
+          <h2>{story.title}</h2>
+          {props.user.id === story.user.id && (
+            <>
+              {" "}
+              {story.published ? (
+                <p className="status" style={{ backgroundColor: "#79d3a5" }}>
+                  {" "}
+                  Published
+                </p>
+              ) : (
+                <p className="status">Draft</p>
+              )}{" "}
+            </>
+          )}
+        </div>
+        <h4>
+          <span>Written by </span>
+          <Link to={`/author/${story.user.id}`}>{story.user.name}</Link>
+        </h4>
+        {props.user.id === story.user.id && (
+          <div className="edit-details">
+            <button
+              onClick={() => {
+                navigate(`/edit/${story.id}`);
+              }}
+            >
+              Edit Story
+            </button>
+          </div>
+        )}
+        <p>Synopsis: {story.brief_description}</p>
+      </div>
+      <div className="story-buttons">
+        <button onClick={() => startStory(story.id)}>Play</button>
+      </div>
+      <div className="reviews">
+        <RatingAndReviewForm
+          story={story}
+          user={props.user}
+          getNewReviews={getNewReviews}
+        />
+        {renderReviews()}
+      </div>
+    </div>
+  );
+}

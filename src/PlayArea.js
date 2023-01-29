@@ -1,64 +1,74 @@
-import React from 'react'
-import Choice from './Choice'
-import { withRouter } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import Choice from "./Choice";
+import { useNavigate, withRouter } from "react-router-dom";
 
-class PlayArea extends React.Component {
+export default function PlayArea(props) {
+  const navigate = useNavigate();
+  const [story, setStory] = useState(null);
+  const [currentScene, setCurrentScene] = useState({});
 
-  state = {
-    story: null,
-    currentScene: {}
-  }
-
-  componentDidMount() {
-    // fetch story based on id from route
-    fetch(`http://localhost:3001/stories/${this.props.match.params.id}`)
-    .then(res => res.json())
-    .then(story => {
-      story.scenes.sort((a, b) => a.id - b.id)
-      this.setState({ story, currentScene: story.scenes[0] })
-    })
-  }
-
-  playAgain = () => {
-    this.setState({ currentScene: this.state.story.scenes[0]})
-  }
-
-  renderChoices = () => {
-    return this.state.currentScene.paths.map((choice, index) => <Choice key={index} choice={choice} changeScene={this.changeScene} />)
-  }
-
-  changeScene = (scene_id) => {
-    let nextScene = this.state.story.scenes.find(scene => scene.id === Number(scene_id))
-
-    console.log(nextScene)
-
-    this.setState({
-      currentScene: nextScene
-    })
-  }
-
-  render() {
-    if (!this.state.story) {
-      return null
-    }
-    return (
-      <div className="play-area">
-        <div>
-          <h2>{this.state.story.title}</h2>
-        </div>
-        <div>
-          <h4>{this.state.currentScene.title}</h4>
-          <p>{this.state.currentScene.text}</p>
-        </div>
-        <div className="choices-display">
-          {this.state.currentScene.paths.length > 0 ? this.renderChoices() : <>
-            <div onClick={this.playAgain} className="choice-card">Play Again</div>
-            <div onClick={() => this.props.history.push(`/story/${this.state.story.id}`)} className="choice-card">Leave a Review</div>
-          </> }
-        </div>
-      </div>
+  useEffect(() => {
+    fetch(
+      // TODO there's a more up to date react router way to do the below
+      `${process.env.REACT_APP_SERVER_URL}/stories/${props.match.params.id}`
     )
-  }
-}
+      .then((res) => res.json())
+      .then((story) => {
+        story.scenes.sort((a, b) => a.id - b.id);
+        setStory(story);
+        setCurrentScene({ currentScene: story.scenes[0] });
+      });
+  });
 
-export default withRouter(PlayArea);
+  const playAgain = () => {
+    setCurrentScene({ currentScene: story.scenes[0] });
+  };
+
+  const renderChoices = () => {
+    return currentScene.paths.map((choice, index) => (
+      <Choice key={index} choice={choice} changeScene={changeScene} />
+    ));
+  };
+
+  const changeScene = (scene_id) => {
+    let nextScene = story.scenes.find((scene) => scene.id === Number(scene_id));
+
+    console.log(nextScene);
+    setCurrentScene({ currentScene: nextScene });
+  };
+
+  if (!story) {
+    return null;
+  }
+  return (
+    <div className="play-area">
+      <div>
+        <h2>{story.title}</h2>
+      </div>
+      <div>
+        <h4>{currentScene.title}</h4>
+        <p>{currentScene.text}</p>
+      </div>
+      <div className="choices-display">
+        {currentScene.paths.length > 0 ? (
+          renderChoices()
+        ) : (
+          <>
+            <div onClick={playAgain} className="choice-card">
+              Play Again
+            </div>
+            <div
+              onClick={() =>
+                // TODO redirect or Navigate?
+                navigate(`/story/${story.id}`)
+              }
+              className="choice-card"
+            >
+              Leave a Review
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
