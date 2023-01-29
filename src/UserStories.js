@@ -1,167 +1,132 @@
-import React from 'react'
-import Story from './Story'
-import { withRouter } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import Story from "./Story";
 
-class UserStories extends React.Component {
+export default function UserStories(props) {
+  const [stories, setStories] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
+  const [edit, setEdit] = useState("inactive");
 
-  state = {
-    stories: [],
-    userProfile: null,
-    edit: "inactive"
-  }
-
-  componentDidMount(){
-    fetch(`http://localhost:3001/user_stories/${this.props.match.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
+  useEffect(() => {
+    fetch(
+      // TODO props.match.params -- still work?
+      `${process.env.REACT_APP_SERVER_URL}/user-stories/${props.match.params.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
       }
-    })
-    .then(res => res.json())
-    .then(storyObj => {
-      storyObj.sort((a, b) => a.id - b.id)
-      this.setState({
-        stories: storyObj
-      })
-    })
+    )
+      .then((res) => res.json())
+      .then((storyObj) => {
+        storyObj.sort((a, b) => a.id - b.id);
+        setStories(storyObj);
+      });
 
-    fetch(`http://localhost:3001/users/${this.props.match.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
+    fetch(
+      `${process.env.REACT_APP_SERVER_URL}/users/${props.match.params.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
       }
-    })
-    .then(res => res.json())
-    .then(userObj => {
-      userObj.user["image"] = userObj.image
+    )
+      .then((res) => res.json())
+      .then((userObj) => {
+        userObj.user["image"] = userObj.image;
+        setUserProfile(userObj.user);
+      });
+  }, [props.match.params, stories, userProfile]);
 
-      this.setState({
-        userProfile: userObj.user
-      })
-    })
-  }
+  const renderStories = () => {
+    return stories.map((story) => (
+      <Story
+        key={story.id}
+        story={story}
+        user={props.user}
+        userProfile={userProfile}
+      />
+    ));
+  };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.match.params.id !== this.props.match.params.id) {
-      fetch(`http://localhost:3001/user_stories/${this.props.match.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-    .then(res => res.json())
-    .then(storyObj => {
-      storyObj.sort((a, b) => a.id - b.id)
-      this.setState({
-        stories: storyObj
-      })
-    })
+  const editBio = () => {
+    setEdit("active");
+  };
 
-    fetch(`http://localhost:3001/users/${this.props.match.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-    .then(res => res.json())
-    .then(userObj => {
-      userObj.user["image"] = userObj.image
-
-      this.setState({
-        userProfile: userObj.user
-      })
-    })
-    }
-  }
-
- renderStories = () => {
-
-   return this.state.stories.map(story => <Story 
-      key={story.id} 
-      story={story} 
-      user={this.props.user} 
-      userProfile={this.state.userProfile}
-    />)
-  }
-
-  editBio = () => {
-    this.setState({
-      edit: "active"
-    })
-  }
-
-  changeBio = (evt) => {
-    let bio = evt.target.value
+  const changeBio = (evt) => {
+    let bio = evt.target.value;
 
     let editedUser = {
-      ...this.state.userProfile,
-      bio: bio
-    }
-  
-    this.setState({
-      userProfile: editedUser
-    })
-  }
+      ...userProfile,
+      bio: bio,
+    };
 
-  editSubmit = (evt) => {
-    evt.preventDefault()
+    setUserProfile(editedUser);
+  };
 
-    fetch(`http://localhost:3001/users/${this.props.match.params.id}`, {
-      method: "PATCH",
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`,
-        "content-type": "application/json"
-      },
-      body: JSON.stringify(this.state.userProfile)
-    })
-    .then(res => res.json())
-    .then((userObj) => {
-      console.log(userObj)
+  const editSubmit = (evt) => {
+    evt.preventDefault();
 
-      this.setState({
-        edit: "inactive"
-      })
-    })
-  }
-
-  render(){
-    if (!(this.props.user && this.state.userProfile)) {
-      return null
-    }
-    return (
-      <div>
-        { this.state.userProfile.id === this.props.user.id ? 
-        <>
-          <div className="user-details">
-            <img src={this.state.userProfile.image} alt="author" />
-            <h2>Hello {this.state.userProfile.name}!</h2>
-            { this.state.edit === "inactive" ? 
-              <p>{this.state.userProfile.bio}</p> :
-              <form onSubmit={this.editSubmit}>
-                <label>Edit Your Bio</label>
-                <input onChange={this.changeBio} name="bio" value={this.state.userProfile.bio}></input>
-                <input type="submit" />
-              </form> 
-            }
-            <button onClick={ this.editBio } >Edit Bio</button>
-          </div>
-          <div className="stories-list">
-            <h3>Stories</h3>
-            {this.renderStories()}
-          </div> 
-        </> 
-        :
-        <>
-          <div className="user-details">
-            <img src={this.state.userProfile.image} alt="author" />
-            <h2>{this.state.userProfile.name}</h2>
-            <p>{this.state.userProfile.bio}</p>
-          </div>
-          <div className="stories-list">
-            <h3>Stories</h3>
-            {this.renderStories()}
-          </div> 
-        </> 
-        }
-      </div>
+    fetch(
+      `${process.env.REACT_APP_SERVER_URL}/users/${props.match.params.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(userProfile),
+      }
     )
-  }
-}
+      .then((res) => res.json())
+      .then((userObj) => {
+        console.log(userObj);
+        setEdit("inactive");
+      });
+  };
 
-export default withRouter(UserStories);
+  if (!(props.user && userProfile)) {
+    return null;
+  }
+  return (
+    <div>
+      {userProfile.id === props.user.id ? (
+        <>
+          <div className="user-details">
+            <img src={userProfile.image} alt="author" />
+            <h2>Hello {userProfile.name}!</h2>
+            {edit === "inactive" ? (
+              <p>{userProfile.bio}</p>
+            ) : (
+              <form onSubmit={editSubmit}>
+                <label>Edit Your Bio</label>
+                <input
+                  onChange={changeBio}
+                  name="bio"
+                  value={userProfile.bio}
+                ></input>
+                <input type="submit" />
+              </form>
+            )}
+            <button onClick={editBio}>Edit Bio</button>
+          </div>
+          <div className="stories-list">
+            <h3>Stories</h3>
+            {renderStories()}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="user-details">
+            <img src={userProfile.image} alt="author" />
+            <h2>{userProfile.name}</h2>
+            <p>{userProfile.bio}</p>
+          </div>
+          <div className="stories-list">
+            <h3>Stories</h3>
+            {renderStories()}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}

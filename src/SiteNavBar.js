@@ -1,31 +1,55 @@
-import React from 'react'
-import { NavLink, withRouter } from 'react-router-dom'
-import CompassLogo from './assets/compass.png'
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import CompassLogo from "./assets/compass.png";
 
-class SiteNavBar extends React.Component {
+export default function SiteNavBa({ user, createStory, handleLogout }) {
+  let navigate = useNavigate();
 
-  render() {
-    return (
-      <header className="navbar">
-        <div className="logo" onClick={() => this.props.history.push('/')}>
-          <img src={ CompassLogo } alt="compass" height="75px" />
-          <h2 className="site-title" >Labyrinth</h2>
-        </div>
-        <div className="nav-links">
-          <NavLink className="nav-link" activeClassName="selected" exact to="/" >See all Stories</NavLink>
-          { this.props.user ? 
-            <>
-              <NavLink className="nav-link" activeClassName="selected" to={`/author/${this.props.user.id}`} >Your Stories</NavLink>
-              <NavLink className="nav-link" activeClassName="selected" to={`/edit`} onClick={this.props.createStory} >Create a Story</NavLink>
-              <NavLink className="nav-link" activeClassName="selected" to='/login' onClick={this.props.handleLogout} >Log Out</NavLink>
-            </> 
-            : 
-            <NavLink className="nav-link" activeClassName="selected" to='/login' >Log In</NavLink>
-          }
-        </div>
-      </header>
-    )
-  }
+  return (
+    <header className="navbar">
+      <div className="logo" onClick={() => navigate("/")}>
+        <img src={CompassLogo} alt="compass" height="75px" />
+        <h2 className="site-title">Labyrinth</h2>
+      </div>
+      <div className="nav-links">
+        <NavLink
+          className={({ isActive }) => (isActive ? "selected" : "nav-link")}
+          to="/"
+        >
+          See all Stories
+        </NavLink>
+        {user ? (
+          <>
+            <NavLink
+              className={({ isActive }) => (isActive ? "selected" : "nav-link")}
+              to={`/author/${user.id}`}
+            >
+              Your Stories
+            </NavLink>
+            <NavLink
+              className={({ isActive }) => (isActive ? "selected" : "nav-link")}
+              to={`/edit`}
+              onClick={createStory}
+            >
+              Create a Story
+            </NavLink>
+            <NavLink
+              className={({ isActive }) => (isActive ? "selected" : "nav-link")}
+              to="/login"
+              onClick={handleLogout}
+            >
+              Log Out
+            </NavLink>
+          </>
+        ) : (
+          <NavLink
+            className={({ isActive }) => (isActive ? "selected" : "nav-link")}
+            to="/login"
+          >
+            Log In
+          </NavLink>
+        )}
+      </div>
+    </header>
+  );
 }
-
-export default withRouter(SiteNavBar)

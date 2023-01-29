@@ -1,98 +1,95 @@
-import React from 'react';
-import SceneDisplayArea from './SceneDisplayArea'
-import StoryOptions from './StoryOptions'
-import { withRouter } from 'react-router-dom'
-import StoryOptionsCollapsed from './StoryOptionsCollapsed'
+import React, { useEffect, useState } from "react";
+import SceneDisplayArea from "./SceneDisplayArea";
+import StoryOptions from "./StoryOptions";
+import StoryOptionsCollapsed from "./StoryOptionsCollapsed";
 
-class StoryEditor extends React.Component {
+export default function StoryEditor(props) {
+  const [story, setStory] = useState(null);
+  const [scenes, setScenes] = useState([]);
+  const [sidebar, setSidebar] = useState(true);
 
-  state = {
-    story: null,
-    scenes: [],
-    sidebar: true
-  }
+  useEffect(() => {
+    fetch(
+      `${process.env.REACT_APP_SERVER_URL}/stories/${props.match.params.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((story) => {
+        setStory(story);
+        getNewScenes();
+      });
+  });
 
-  // fetch the newly created story from url
-  componentDidMount() {
-    fetch(`http://localhost:3001/stories/${this.props.match.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-        }
-    })
-    .then(res => res.json())
-    .then(story => {
-      this.setState({ story })
-      this.getNewScenes()
-    })
-  }
-
-  addNewScene = () => {
+  const addNewScene = () => {
     let newScene = {
-      story_id: this.state.story.id,
-      title: '',
-      text: '',
+      story_id: story.id,
+      title: "",
+      text: "",
       paths: [],
       position: {
-        "left": 200,
-        "top": 50
-      }
-    }
+        left: 200,
+        top: 50,
+      },
+    };
 
-    fetch("http://localhost:3001/scenes", {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/scenes`, {
       method: "POST",
       headers: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.token}`,
       },
-      body: JSON.stringify(newScene)
+      body: JSON.stringify(newScene),
     })
-    .then(res => res.json())
-    .then(newScene => {
-      this.setState({
-        scenes: [...this.state.scenes, newScene]
-      })
-    })  
-  }
+      .then((res) => res.json())
+      .then((newScene) => {
+        setScenes([...scenes, newScene]);
+      });
+  };
 
-  getNewScenes = () => {
-    fetch(`http://localhost:3001/story_scenes/${this.state.story.id}`, {
+  const getNewScenes = () => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/story-scenes/${story.id}`, {
       headers: {
-        'Authorization': `Bearer ${localStorage.token}`
+        Authorization: `Bearer ${localStorage.token}`,
       },
     })
-    .then(res => res.json())
-    .then(scenes => {
-      // console.log(scenes)
-      scenes.sort((a, b) => a.id - b.id)
-      this.setState({
-        scenes 
-      })
-    })
-  }
+      .then((res) => res.json())
+      .then((scenes) => {
+        // console.log(scenes)
+        scenes.sort((a, b) => a.id - b.id);
+        setScenes(scenes);
+      });
+  };
 
-  sidebarDisplay = () => {
-    this.setState(prevState => ({
-      sidebar: !prevState.sidebar
-    }))
-  }
-  
-  updateStory = (story) => {
-    this.setState({ story })
-  }
+  const sidebarDisplay = () => {
+    setSidebar(!sidebar);
+  };
 
-  render() {
-    return (
-      <div className="story-editor">
-        { this.state.sidebar? 
-          <StoryOptions story={this.state.story} sidebarDisplay={this.sidebarDisplay} updateStory={this.updateStory} /> 
-          : 
-          <StoryOptionsCollapsed sidebarDisplay={this.sidebarDisplay} />
-        }
-        {/* <StoryOptions story={this.state.story} /> */}
-        <SceneDisplayArea scenes={this.state.scenes} addNewScene={this.addNewScene} story={this.state.story} getNewScenes={this.getNewScenes} />
-      </div>
-    )
-  }
+  const updateStory = (story) => {
+    setStory(story);
+  };
+
+  return (
+    <div className="story-editor">
+      {sidebar ? (
+        <StoryOptions
+          story={story}
+          sidebarDisplay={sidebarDisplay}
+          updateStory={updateStory}
+        />
+      ) : (
+        <StoryOptionsCollapsed sidebarDisplay={sidebarDisplay} />
+      )}
+      {/* <StoryOptions story={story} /> */}
+      <SceneDisplayArea
+        scenes={scenes}
+        addNewScene={addNewScene}
+        story={story}
+        getNewScenes={getNewScenes}
+      />
+    </div>
+  );
 }
-
-export default withRouter(StoryEditor);

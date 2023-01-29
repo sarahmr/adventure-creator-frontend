@@ -1,120 +1,120 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
-import RightArrow from './assets/angle-double-right-solid.svg'
+import React, { useEffect, useState } from "react";
+import RightArrow from "./assets/angle-double-right-solid.svg";
+import redirect from "react-router-dom";
 
-class StoryOptions extends React.Component {
+export default function StoryOptions(props) {
+  const [title, setTitle] = useState("");
+  const [published, setPublished] = useState(false);
+  const [briefDescription, setBriefDescription] = useState("");
+  const [message, setMessage] = useState("");
 
-  state = {
-    title: '',
-    published: false,
-    brief_description: '',
-    message: ''
-  }
+  useEffect(() => {
+    setTitle(props.story.title);
+    setPublished(props.story.published);
+    setBriefDescription(props.story.brief_description);
+  }, [props, title, published, briefDescription, message]);
 
-  componentDidMount() {
-    if (this.props.story) {
-      this.setState({
-        title: this.props.story.title,
-        published: this.props.story.published,
-        brief_description: this.props.story.brief_description
-      })
+  const onChange = (event) => {
+    if (event.target.name === "title") {
+      setTitle(event.target.value);
+    } else if (event.target.name === "briefDescription") {
+      setBriefDescription(event.target.value);
     }
-  }
+  };
 
-  componentDidUpdate(prevProps){
-    if (prevProps.story !== this.props.story) {
-      this.setState({
-        title: this.props.story.title,
-        published: this.props.story.published,
-        brief_description: this.props.story.brief_description
-      })
-    }
-  }
+  const changeStoryStatus = () => {
+    setPublished(!published);
+  };
 
-  onChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    })
-  }
-
-  changeStoryStatus = () => {
-    this.setState(prevState => ({
-      published: !prevState.published
-    }))
-  }
-
-  saveDraft = () => {
+  const saveDraft = () => {
     // save draft
     // make a patch request to update title and maybe published
-    fetch(`http://localhost:3001/stories/${this.props.story.id}`, {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/stories/${props.story.id}`, {
       method: "PATCH",
       headers: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.token}`,
       },
       body: JSON.stringify({
-        title: this.state.title,
-        published: this.state.published,
-        brief_description: this.state.brief_description
-      })
+        title: title,
+        published: published,
+        brief_description: briefDescription,
+      }),
     })
-    .then(res => res.json())
-    .then(storyObj => {
-      // console.log(storyObj)
-      this.setState({message: "Saved!"})
-      this.props.updateStory(storyObj)
-      setTimeout(() => this.setState({message: ''}), 1500)
-    })
-  }
+      .then((res) => res.json())
+      .then((storyObj) => {
+        // console.log(storyObj)
+        setMessage("Saved!");
+        props.updateStory(storyObj);
+        setTimeout(() => setMessage(""), 1500);
+      });
+  };
 
-  storyToDelete = (id) => {
+  const storyToDelete = (id) => {
     // delete story from database
-    fetch(`http://localhost:3001/stories/${id}`, {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/stories/${id}`, {
       method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
+        Authorization: `Bearer ${localStorage.token}`,
+      },
     })
-    .then(res => res.json())
-    .then(deletedStory => {
-      this.props.history.push(`/author/${this.props.story.user.id}`)
-    })
-  }
+      .then((res) => res.json())
+      .then((deletedStory) => {
+        redirect(`/author/${props.story.user.id}`);
+      });
+  };
 
-  collapse = () => {
-    this.props.sidebarDisplay()
-  }
+  const collapse = () => {
+    props.sidebarDisplay();
+  };
 
-  render(){
-    return (
-      <div className="story-options">
-        <button className="side-collapse-button" onClick={this.collapse} >
-          <img className="side-collapse" src={ RightArrow } />
-        </button>
-        <div className="title-description">
-          <div>
-            <label>Story Title:</label><br/>
-            <input onChange={this.onChange} type="text" name="title" value={this.state.title} />
-          </div>
-          <div>
-            <label>Brief Description:</label><br/>
-            <textarea rows="3" onChange={this.onChange} type="text" name="brief_description" value={this.state.brief_description} />
-          </div>
+  return (
+    <div className="story-options">
+      <button className="side-collapse-button" onClick={collapse}>
+        <img alt="right arrow" className="side-collapse" src={RightArrow} />
+      </button>
+      <div className="title-description">
+        <div>
+          <label>Story Title:</label>
+          <br />
+          <input onChange={onChange} type="text" name="title" value={title} />
         </div>
-        <div className="publish-save">
-          <div>
-            <label>Publish</label>
-            <input type='checkbox' name="published" onChange={this.changeStoryStatus} checked={this.state.published} />
-          </div>
-          <div>{this.state.message}</div>
-          <div>
-            <button onClick={() => {this.storyToDelete(this.props.story.id)}} >Delete Story</button>
-            <button onClick={this.saveDraft} style={{backgroundColor: "#6cc2d6"}}>Save</button>
-          </div>         
+        <div>
+          <label>Brief Description:</label>
+          <br />
+          <textarea
+            rows="3"
+            onChange={onChange}
+            type="text"
+            name="briefDescription"
+            value={briefDescription}
+          />
         </div>
       </div>
-    )
-  }
+      <div className="publish-save">
+        <div>
+          <label>Publish</label>
+          <input
+            type="checkbox"
+            name="published"
+            onChange={changeStoryStatus}
+            checked={published}
+          />
+        </div>
+        <div>{message}</div>
+        <div>
+          <button
+            onClick={() => {
+              storyToDelete(props.story.id);
+            }}
+          >
+            Delete Story
+          </button>
+          <button onClick={saveDraft} style={{ backgroundColor: "#6cc2d6" }}>
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
-
-export default withRouter(StoryOptions)

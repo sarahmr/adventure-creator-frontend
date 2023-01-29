@@ -1,201 +1,208 @@
-import React from 'react'
-import Path from './Path'
-import SceneTitle from './SceneTitle'
-import Modal from "react-modal"
+import React, { useState } from "react";
+import Path from "./Path";
+import SceneTitle from "./SceneTitle";
+import Modal from "react-modal";
 
-class Scene extends React.Component {
+export default function Scene(props) {
+  const [edit, setEdit] = useState(false);
+  const [title, setTitle] = useState(props.scene.title);
+  const [text, setText] = useState(props.scene.text);
+  const [paths, setPaths] = useState([...props.scene.paths]);
+  const [showModal, setShowModal] = useState(false);
 
-  state = {
-    edit: false,
-    title: this.props.scene.title,
-    text: this.props.scene.text,
-    paths: [...this.props.scene.paths],
-    showModal: false
-  }
+  const onChange = (event) => {
+    if (event.target.name === "title") {
+      setTitle(event.target.value);
+    } else if (event.target.name === "text") {
+      setText(event.target.value);
+    }
+  };
 
-  onChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    })
-  }
-
-  onPathChange = (newPath, findIndex) => {
-    let newPaths = this.state.paths.map((path, index) => {
+  const onPathChange = (newPath, findIndex) => {
+    let newPaths = paths.map((path, index) => {
       if (index === findIndex) {
-        return newPath
+        return newPath;
       }
-      return path
-    })
+      return path;
+    });
 
-    this.setState({
-      paths: newPaths
-    })
-  }
+    setPaths(newPaths);
+  };
 
-  onSubmit = (event) => {
-    event.preventDefault()
+  const onSubmit = (event) => {
+    event.preventDefault();
     // take info from paths and create new scenes or find existing scenes
-    let needNewScenePaths = []
+    let needNewScenePaths = [];
 
     // create paths for sending to backend (different slighly than state)
-    let paths = []
+    let paths = [];
 
-    // console.log(this.state.paths)
+    // console.log(paths)
     // iterate through paths, if it's scene title need post request to get scene id, if selected scene need path formated as scene_id
-    this.state.paths.forEach(path => {
-      if (path.scene_title){
-        needNewScenePaths.push(path)
+    paths.forEach((path) => {
+      if (path.scene_title) {
+        needNewScenePaths.push(path);
       } else {
         paths.push({
-          "scene_id": path.selected_scene || path.scene_id,
-          "choice_text": path.choice_text
-        })
+          scene_id: path.selected_scene || path.scene_id,
+          choice_text: path.choice_text,
+        });
       }
-    })
+    });
 
     // console.log(paths)
     if (needNewScenePaths.length > 1) {
       // set left positions to be props.left first then add 50 each time
       for (let i = 0; i < needNewScenePaths.length; i++) {
-        needNewScenePaths[i].position = {}
+        needNewScenePaths[i].position = {};
         if (i === 0) {
-          // console.log(this.props.left)
-          needNewScenePaths[i].position.left = this.props.left
+          // console.log(props.left)
+          needNewScenePaths[i].position.left = props.left;
         } else {
           // console.log(needNewScenePaths[i - 1].position.left)
-          needNewScenePaths[i].position.left = needNewScenePaths[i - 1].position.left + 100
+          needNewScenePaths[i].position.left =
+            needNewScenePaths[i - 1].position.left + 100;
         }
         // console.log(needNewScenePaths[i].position.left)
       }
       // console.log(needNewScenePaths)
     }
 
-    let promises = needNewScenePaths.map(path => 
-      fetch("http://localhost:3001/scenes", {
+    let promises = needNewScenePaths.map((path) =>
+      fetch(`${process.env.REACT_APP_SERVER_URL}/scenes`, {
         method: "POST",
         headers: {
-          'content-type': 'application/json',
-          'Authorization': `Bearer ${localStorage.token}`
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage.token}`,
         },
         body: JSON.stringify({
-          story_id: `${this.props.story.id}`,
+          story_id: `${props.story.id}`,
           title: `${path.scene_title}`,
-          text: '',
+          text: "",
           paths: [],
           position: {
             left: path.position.left,
-            top: (this.props.top + 150)
-          }
-        })
+            top: props.top + 150,
+          },
+        }),
       })
-      .then(res => res.json())
-      .then(newScene => {
-        paths.push({
-          "scene_id": newScene.id,
-          "choice_text": path.choice_text
+        .then((res) => res.json())
+        .then((newScene) => {
+          paths.push({
+            scene_id: newScene.id,
+            choice_text: path.choice_text,
+          });
         })
-      })
-    )
+    );
 
-    Promise.all(promises).then(() => this.sceneUpdate(paths))
-    
-    this.displayForm()
-  }
+    Promise.all(promises).then(() => sceneUpdate(paths));
 
-  sceneUpdate = (paths) => {
-    fetch(`http://localhost:3001/scenes/${this.props.scene.id}`, {
+    displayForm();
+  };
+
+  const sceneUpdate = (paths) => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/scenes/${props.scene.id}`, {
       method: "PATCH",
       headers: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.token}`,
       },
       body: JSON.stringify({
-        story_id: `${this.props.story.id}`,
-        title: this.state.title,
-        text: this.state.text,
+        story_id: `${props.story.id}`,
+        title: title,
+        text: text,
         paths: paths,
         position: {
-          left: this.props.left,
-          top: this.props.top
-        }
-      })
+          left: props.left,
+          top: props.top,
+        },
+      }),
     })
-    .then(res => res.json())
-    .then(newScene => {
-      // trigger fetch in story editor to render scenes
-      this.props.getNewScenes()
-    })
-  }
+      .then((res) => res.json())
+      .then((newScene) => {
+        // trigger fetch in story editor to render scenes
+        props.getNewScenes();
+      });
+  };
 
-  renderPaths = () => {
-    // console.log(this.state.paths)
-    return this.state.paths.map((path, index) => <Path key={index} scenes={this.props.scenes} index={index} path={path} onPathChange={this.onPathChange} />)
-  }
+  const renderPaths = () => {
+    // console.log(paths)
+    return paths.map((path, index) => (
+      <Path
+        key={index}
+        scenes={props.scenes}
+        index={index}
+        path={path}
+        onPathChange={onPathChange}
+      />
+    ));
+  };
 
-  addAPath = () => {
-    let newPath = { scene_title: '', choice_text: '', selected_scene: null }
-    this.setState({
-      paths: [...this.state.paths, newPath]
-    })
-  }
+  const addAPath = () => {
+    let newPath = { scene_title: "", choice_text: "", selected_scene: null };
+    setPaths([...paths, newPath]);
+  };
 
-  displayForm = () => {
-    this.setState(prevState => ({
-      edit: !prevState.edit,
-      showModal: !prevState.showModal
-    }))
-  }
+  const displayForm = () => {
+    setEdit(!edit);
+    setShowModal(!showModal);
+  };
 
-  
-
-  render(){
-    Modal.setAppElement(document.getElementById("root"))
-
-    return(
-      <div className="scene">
-        <SceneTitle 
-          edit={this.state.edit} 
-          scene={this.props.scene} 
-          displayForm={this.displayForm} 
-          top={this.props.top} 
-          left={this.props.left} 
-          // hideSourceOnDrag={this.props.hideSourceOnDrag} 
-          />
-        <Modal 
-          isOpen={this.state.showModal} 
-          onRequestClose={this.displayForm} 
-          className="edit-modal">
-          <div className="modal-inside">
-            <div className="exit-modal-button">
-              <button onClick={this.displayForm}>X</button>
-            </div>
-            {this.state.edit ? 
-              <form onSubmit={this.onSubmit} className="scene-form">
+  // TODO what is this doing?
+  Modal.setAppElement(document.getElementById("root"));
+  return (
+    <div className="scene">
+      <SceneTitle
+        edit={edit}
+        scene={props.scene}
+        displayForm={displayForm}
+        top={props.top}
+        left={props.left}
+        // hideSourceOnDrag={props.hideSourceOnDrag}
+      />
+      <Modal
+        isOpen={showModal}
+        onRequestClose={displayForm}
+        className="edit-modal"
+      >
+        <div className="modal-inside">
+          <div className="exit-modal-button">
+            <button onClick={displayForm}>X</button>
+          </div>
+          {edit ? (
+            <form onSubmit={onSubmit} className="scene-form">
               <div className="scene-info">
                 <label>Scene Title:</label>
-                <input onChange={this.onChange} type="text" name="title" value={this.state.title} />
+                <input
+                  onChange={onChange}
+                  type="text"
+                  name="title"
+                  value={title}
+                />
               </div>
               <div className="scene-info">
                 <label>Text:</label>
-                <textarea rows="4" onChange={this.onChange} name="text" value={this.state.text} ></textarea>
+                <textarea
+                  rows="4"
+                  onChange={onChange}
+                  name="text"
+                  value={text}
+                ></textarea>
               </div>
               <div className="path-area">
                 <h4>Paths:</h4>
-                {this.renderPaths()}
-                <button type="button" onClick={this.addAPath}>+</button>
+                {renderPaths()}
+                <button type="button" onClick={addAPath}>
+                  +
+                </button>
               </div>
               <div className="scene-submit">
-                <input type="submit" value="Save"/>
+                <input type="submit" value="Save" />
               </div>
-              </form>
-            : null 
-            }
-          </div>
-        </Modal>
-        
-      </div>
-    )
-  }
+            </form>
+          ) : null}
+        </div>
+      </Modal>
+    </div>
+  );
 }
-
-export default Scene
